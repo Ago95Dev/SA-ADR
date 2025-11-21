@@ -1,7 +1,7 @@
 ---
 # These are optional metadata elements. Feel free to remove any of them.
 status: accepted
-date: 2025-11-17
+date: 2025-11-21
 decision-makers: Agostino, Alessandro, Bryant, Graziano
 consulted: Agostino, Alessandro, Bryant, Graziano
 informed: DAgostino, Alessandro, Bryant, Graziano
@@ -11,7 +11,7 @@ informed: DAgostino, Alessandro, Bryant, Graziano
 
 ## Context and Problem Statement
 
-The Urban Digital Twin for Emergency Decision-Making must process 100,000 events per minute from 5,000 data streams across a metropolitan district during emergency conditions, with simulation updates occurring within 5-10 seconds of real-world changes. The system must support up to 50 concurrent operators while minimizing infrastructure and operational costs. 
+The Urban Digital Twin for Emergency Decision-Making must process 100,000 events per minute from 5,000 data streams across a metropolitan district during emergency conditions, with simulation updates occurring within 5-10 seconds of real-world changes. The system must support up to 50 concurrent operators while minimizing infrastructure and operational costs.
 
 Where should we deploy this real-time emergency system: on-premises data centers, cloud serverless infrastructure, or a hybrid approach combining edge and cloud resources?
 
