@@ -4,7 +4,7 @@ status: accepted
 date: 2025-11-21
 decision-makers: Agostino, Alessandro, Bryant, Graziano
 consulted: Agostino, Alessandro, Bryant, Graziano
-informed: DAgostino, Alessandro, Bryant, Graziano
+informed: Agostino, Alessandro, Bryant, Graziano
 ---
 
 # Deployment Architecture: On-Premises vs Serverless vs Hybrid
