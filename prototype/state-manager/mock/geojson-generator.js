@@ -32,38 +32,54 @@ function generateDistrictGeoJSON(districts) {
 
 /**
  * Generate GeoJSON FeatureCollection for roads with traffic congestion
- * @param {Array} edges - Array of edge objects from cityGraph
+ * @param {Array} districts - Array of district objects from digital twin
+ * @param {string} districtId - Optional: filter by specific district
  * @returns {Object} GeoJSON FeatureCollection with congestion styling
  */
-function generateRoadCongestionGeoJSON(edges) {
+function generateRoadCongestionGeoJSON(districts, districtId = null) {
+  const features = [];
+  
+  // Filter districts if districtId is provided (for District Operator role)
+  const filteredDistricts = districtId 
+    ? districts.filter(d => d.districtId === districtId)
+    : districts;
+  
+  filteredDistricts.forEach(district => {
+    district.districtGraph.edges.forEach(edge => {
+      features.push({
+        "type": "Feature",
+        "properties": {
+          "edgeId": edge.edgeId,
+          "roadSegmentId": edge.roadSegmentId,
+          "name": edge.name,
+          "fromNode": edge.fromNode,
+          "toNode": edge.toNode,
+          "distance": edge.distance,
+          "speedLimit": edge.speedLimit,
+          "lanes": edge.lanes,
+          "direction": edge.direction,
+          "districtId": district.districtId,
+          "districtName": district.name,
+          // Traffic data
+          "averageSpeed": edge.trafficConditions.averageSpeed,
+          "congestionLevel": edge.trafficConditions.congestionLevel,
+          "vehicleCount": edge.trafficConditions.vehicleCount,
+          "travelTime": edge.trafficConditions.travelTime,
+          "hasIncidents": edge.trafficConditions.incidents.length > 0,
+          "incidentCount": edge.trafficConditions.incidents.length,
+          // Color coding for congestion
+          "strokeColor": getCongestionColor(edge.trafficConditions.congestionLevel),
+          "strokeWidth": getCongestionWidth(edge.trafficConditions.congestionLevel),
+          "lastUpdated": edge.lastUpdated
+        },
+        "geometry": edge.geometry
+      });
+    });
+  });
+  
   return {
     "type": "FeatureCollection",
-    "features": edges.map(edge => ({
-      "type": "Feature",
-      "properties": {
-        "edgeId": edge.edgeId,
-        "roadSegmentId": edge.roadSegmentId,
-        "name": edge.name,
-        "fromNode": edge.fromNode,
-        "toNode": edge.toNode,
-        "distance": edge.distance,
-        "speedLimit": edge.speedLimit,
-        "lanes": edge.lanes,
-        "direction": edge.direction,
-        // Traffic data
-        "averageSpeed": edge.trafficConditions.averageSpeed,
-        "congestionLevel": edge.trafficConditions.congestionLevel,
-        "vehicleCount": edge.trafficConditions.vehicleCount,
-        "travelTime": edge.trafficConditions.travelTime,
-        "hasIncidents": edge.trafficConditions.incidents.length > 0,
-        "incidentCount": edge.trafficConditions.incidents.length,
-        // Color coding for congestion
-        "strokeColor": getCongestionColor(edge.trafficConditions.congestionLevel),
-        "strokeWidth": getCongestionWidth(edge.trafficConditions.congestionLevel),
-        "lastUpdated": edge.lastUpdated
-      },
-      "geometry": edge.geometry
-    }))
+    "features": features
   };
 }
 
@@ -220,17 +236,69 @@ function getCongestionWidth(congestionLevel) {
 }
 
 /**
+ * Generate GeoJSON FeatureCollection for traffic intersections
+ * @param {Array} districts - Array of district objects from digital twin
+ * @param {string} districtId - Optional: filter by specific district
+ * @returns {Object} GeoJSON FeatureCollection
+ */
+function generateIntersectionGeoJSON(districts, districtId = null) {
+  const features = [];
+  
+  // Filter districts if districtId is provided (for District Operator role)
+  const filteredDistricts = districtId 
+    ? districts.filter(d => d.districtId === districtId)
+    : districts;
+  
+  filteredDistricts.forEach(district => {
+    district.districtGraph.nodes.forEach(node => {
+      features.push({
+        "type": "Feature",
+        "properties": {
+          "nodeId": node.nodeId,
+          "type": node.type,
+          "name": node.name,
+          "districtId": district.districtId,
+          "districtName": district.name,
+          "trafficLightStatus": node.trafficLight.status,
+          "timeRemaining": node.trafficLight.timeRemaining,
+          "cycleTime": node.trafficLight.cycleTime
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [node.location.longitude, node.location.latitude]
+        }
+      });
+    });
+  });
+  
+  return {
+    "type": "FeatureCollection",
+    "features": features
+  };
+}
+
+/**
  * Master function to generate all GeoJSON layers from digital twin state
  * @param {Object} digitalTwinState - Complete digital twin state object
+ * @param {string} districtId - Optional: filter by specific district (for District Operator)
  * @returns {Object} Object containing all GeoJSON layers
  */
-function generateAllGeoJSON(digitalTwinState) {
+function generateAllGeoJSON(digitalTwinState, districtId = null) {
   return {
-    districts: generateDistrictGeoJSON(digitalTwinState.districts),
-    roads: generateRoadCongestionGeoJSON(digitalTwinState.cityGraph.edges),
-    sensors: generateSensorGeoJSON(digitalTwinState.districts),
-    buildings: generateBuildingGeoJSON(digitalTwinState.districts),
-    weatherStations: generateWeatherStationGeoJSON(digitalTwinState.districts)
+    districts: generateDistrictGeoJSON(
+      districtId ? digitalTwinState.districts.filter(d => d.districtId === districtId) : digitalTwinState.districts
+    ),
+    roads: generateRoadCongestionGeoJSON(digitalTwinState.districts, districtId),
+    intersections: generateIntersectionGeoJSON(digitalTwinState.districts, districtId),
+    sensors: generateSensorGeoJSON(
+      districtId ? digitalTwinState.districts.filter(d => d.districtId === districtId) : digitalTwinState.districts
+    ),
+    buildings: generateBuildingGeoJSON(
+      districtId ? digitalTwinState.districts.filter(d => d.districtId === districtId) : digitalTwinState.districts
+    ),
+    weatherStations: generateWeatherStationGeoJSON(
+      districtId ? digitalTwinState.districts.filter(d => d.districtId === districtId) : digitalTwinState.districts
+    )
   };
 }
 

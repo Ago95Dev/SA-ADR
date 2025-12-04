@@ -3,12 +3,11 @@ export interface City {
   timestamp:         Date;
   metadata:          CityMetadata;
   districts:         District[];
-  cityGraph:         CityGraph;
   publicTransport:   PublicTransport;
   emergencyServices: EmergencyServices;
 }
 
-export interface CityGraph {
+export interface DistrictGraph {
   nodes: Node[];
   edges: Edge[];
 }
@@ -75,6 +74,7 @@ export interface District {
   sensors:         Sensor[];
   buildings:       Building[];
   weatherStations: WeatherStation[];
+  districtGraph:   DistrictGraph;
 }
 
 export interface Building {

@@ -8,6 +8,36 @@ The State Manager Microservice reads data from various data streams, processes i
 
 There will be only one replica of this service to prevent inconsistencies between different versions of the virtual model, ensuring a single, authoritative source of truth [NFR2].
 
+## Role-Based Access
+
+The Digital Twin State Manager supports two primary user roles with different access levels:
+
+### **City Manager Role**
+- **Full City Access**: Can view and manage the complete city digital twin
+- **All Districts**: Has access to all district data, sensors, buildings, and traffic graphs
+- **Cross-District Analytics**: Can perform city-wide analysis and comparisons
+- **API Endpoints**: Can access all endpoints without district filtering
+
+### **District Operator Role**
+- **Single District Access**: Limited to viewing and managing only their assigned district
+- **District-Scoped Data**: Access restricted to sensors, buildings, weather stations, and traffic graph within their district
+- **Localized Operations**: Can only perform operations within district boundaries
+- **API Endpoints**: Must use district-specific endpoints (e.g., `/state/districts/{districtId}`)
+
+### Data Model Design for Role-Based Access
+
+Each district in the city is self-contained with its own:
+- **Sensors**: Environmental, traffic, and parking sensors
+- **Buildings**: With occupancy and embedded sensors
+- **Weather Stations**: District-specific weather readings
+- **District Graph**: Road network (nodes and edges) within district boundaries
+
+This district-centric data model enables:
+- **Efficient Authorization**: Simply check user's assigned district(s)
+- **Data Isolation**: District operators cannot access other districts' data
+- **Parallel Processing**: Each district can be processed independently
+- **Scalable Access Control**: Easy to add new districts or operators
+
 ## Architecture Components
 
 ### 1. **State Manager API**
@@ -15,13 +45,16 @@ There will be only one replica of this service to prevent inconsistencies betwee
 RESTful API that provides access to the current city state and related operations.
 
 **Endpoints:**
-- `GET /state` - Returns the complete current state of the digital twin as JSON
-- `GET /state/districts` - Returns all districts with their sensors, buildings, and weather stations
-- `GET /state/districts/{districtId}` - Returns a specific district state
-- `GET /state/cityGraph` - Returns the city road graph with traffic conditions
-- `GET /state/sensors` - Returns all sensor readings across the city
-- `GET /state/buildings` - Returns all buildings with occupancy and embedded sensors
-- `GET /health` - Health check endpoint
+- `GET /state` - Returns the complete current state of the digital twin as JSON (City Manager only)
+- `GET /state/districts` - Returns all districts with their sensors, buildings, and weather stations (City Manager only)
+- `GET /state/districts/{districtId}` - Returns a specific district state (City Manager or assigned District Operator)
+- `GET /state/districts/{districtId}/graph` - Returns the district's road graph with traffic conditions
+- `GET /state/districts/{districtId}/sensors` - Returns all sensor readings within a district
+- `GET /state/districts/{districtId}/buildings` - Returns all buildings with occupancy within a district
+- `GET /state/districts/{districtId}/weather` - Returns weather stations within a district
+- `GET /state/publicTransport` - Returns city-wide public transport data (City Manager only)
+- `GET /state/emergencyServices` - Returns emergency incidents and units (City Manager only)
+- `GET /health` - Health check endpoint (no authentication required)
 
 ### 2. **WebSocket Connection**
 
@@ -69,18 +102,26 @@ Document database for persisting historical snapshots of the city state at speci
 
 ## Data Ingestion
 
-The microservice consumes data from multiple Kafka topics, each representing different data sources in the city:
+The microservice consumes data from multiple Kafka topics, each representing different data sources in the city. Topics are partitioned by district to enable parallel processing and align with the role-based access model.
 
-**Kafka Topics:**
-- `sensors.environmental` - PM2.5, noise, air quality sensors
-- `sensors.traffic` - Traffic cameras, vehicle counters, parking occupancy
-- `buildings.occupancy` - Building occupancy, HVAC, energy consumption
-- `buildings.sensors` - Temperature, humidity, water, security sensors
-- `weather.stations` - Weather readings from distributed stations
-- `transport.gps` - Real-time bus and vehicle GPS locations
+**Kafka Topics (Partitioned by District):**
+- `sensors.environmental` - PM2.5, noise, air quality sensors (partitioned by districtId)
+- `sensors.traffic` - Traffic cameras, vehicle counters, parking occupancy (partitioned by districtId)
+- `buildings.occupancy` - Building occupancy, HVAC, energy consumption (partitioned by districtId)
+- `buildings.sensors` - Temperature, humidity, water, security sensors (partitioned by districtId)
+- `weather.stations` - Weather readings from distributed stations (partitioned by districtId)
+- `traffic.graph` - Road segment traffic conditions and incidents (partitioned by districtId)
+
+**City-Wide Topics (No Partitioning):**
+- `transport.gps` - Real-time bus and vehicle GPS locations (cross-district)
 - `transport.stations` - Metro and transit station data
-- `emergency.incidents` - Emergency service incidents and responses
-- `traffic.graph` - Road segment traffic conditions and incidents
+- `emergency.incidents` - Emergency service incidents and responses (cross-district)
+
+**Partition Strategy:**
+Each message includes a `districtId` field used as the partition key. This ensures:
+- Messages for the same district are processed in order by the same consumer
+- District-level state updates maintain consistency
+- Parallel processing of different districts without coordination overhead
 
 ## State Reconstruction and Incremental Updates
 
@@ -135,16 +176,65 @@ See `mock/type.ts` for complete TypeScript interface definitions and `mock/city-
 
 ## Deployment and Scalability
 
-**Single Replica Strategy**: The service runs as a single instance to ensure:
-- Consistency of the virtual model [NFR2]
-- Single authoritative source of truth
-- Simplified state management without synchronization overhead
+**Single Instance with Parallel Consumer Strategy**: The service runs as a single instance with multiple internal Kafka consumers processing partitions in parallel, ensuring consistency while achieving concurrent processing [NFR2]:
 
-**High Availability Considerations:**
-- Redis persistence (AOF/RDB) for state recovery
-- MongoDB replica sets for snapshot durability
-- Kubernetes liveness/readiness probes
-- Fast failover with state restoration from latest snapshot + event replay from Kafka
+### Internal Parallelization by District
+
+Instead of deploying multiple replicas, the microservice achieves parallelism through:
+
+**1. Kafka Partitioning by District**
+
+Each Kafka topic is partitioned by district ID, ensuring all messages for a specific district go to the same partition:
+- Partition key: `districtId`
+- Partition assignment: `hash(districtId) % numPartitions`
+- Ordering guarantee: All operations for a district are processed sequentially
+
+**2. Multiple Consumer Threads/Workers**
+
+The single instance spawns multiple consumer workers (e.g., 3-10 depending on district count):
+- Each worker is assigned specific partitions
+- Workers process their assigned districts concurrently
+- Thread-safe state updates to Redis per district
+
+**3. District-Sharded State in Redis**
+
+State is stored in Redis with district-level granularity for concurrent access:
+
+```
+district:DIST-001:state → Downtown District state (JSON)
+district:DIST-002:state → Midtown District state (JSON)
+district:DIST-003:state → Residential District state (JSON)
+city:graph → City-wide road graph
+city:publicTransport → Public transport state
+city:emergencyServices → Emergency services state
+```
+
+**4. API State Aggregation**
+
+API endpoints aggregate district states from Redis in parallel to construct the full city view:
+- `GET /state` - Fetches all district keys and merges into complete city state
+- `GET /state/districts/{districtId}` - Direct fetch from single Redis key
+- Parallel Redis queries minimize response time
+
+
+### Failure Recovery
+
+**Process Restart:**
+- State restored from Redis (current state)
+- MongoDB snapshot provides last known good state
+- Kafka offset management: Consumers resume from last committed offset per partition
+
+**Recovery Steps:**
+1. Load latest snapshot from MongoDB (if Redis is empty)
+2. Connect consumers to Kafka with stored offsets
+3. Replay uncommitted messages from Kafka
+4. Resume normal operation
+
+**Recovery Time:**
+- Cold start (empty Redis): < 60 seconds
+- Warm start (Redis populated): < 10 seconds
+- No data loss: Kafka retention + offset tracking
+
 
 ## Performance Characteristics
 
@@ -168,19 +258,44 @@ Utility files for visualization:
 
 ## Technology Stack
 
-- **Runtime**: Node.js / TypeScript
 - **In-Memory Store**: Redis 7+
 - **Document Store**: MongoDB 6+
 - **Message Broker**: Apache Kafka
-- **API Framework**: Express.js / FastAPI / Spring Boot
-- **WebSocket**: Socket.io / native WebSocket
 - **Containerization**: Docker
 - **Orchestration**: Kubernetes
+
+**Note**: Programming language and frameworks to be determined based on project requirements.
 
 ## Files in this Directory
 
 - `mock/city-digital-twin.json` - Sample digital twin state representing a smart city
-- `mock/type.ts` - TypeScript interfaces for the entire digital twin data model
+- `mock/type.ts` - Type definitions for the entire digital twin data model
 - `geojson-generator.js` - Utility functions to convert state to GeoJSON format
 - `map-visualization.html` - Interactive web map for visualizing the digital twin
 - `docker-compose.yml` - Docker composition for local development
+
+## Implementation Considerations
+
+### Kafka Consumer Implementation
+
+Each consumer worker should:
+- Subscribe to specific partition(s) based on worker ID
+- Process messages sequentially within partition
+- Commit offsets after successful Redis write
+- Handle errors with retry logic and dead-letter queue
+- Monitor lag and processing rate
+
+### Redis Update Pattern
+
+For thread-safe concurrent updates:
+- Use district-specific keys to avoid lock contention
+- Implement optimistic locking with WATCH/MULTI/EXEC for critical updates
+- Use Redis pipelines for batch operations
+- Set appropriate TTL for cached aggregations
+
+### WebSocket Update Distribution
+
+- Aggregate changes from all consumer workers
+- Buffer updates (e.g., 100ms window) to reduce message frequency
+- Push incremental diffs grouped by district
+- Handle client reconnection with state synchronization

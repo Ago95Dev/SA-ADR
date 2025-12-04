@@ -180,7 +180,107 @@
           "status": "active",
           "lastUpdated": "2025-12-04T10:30:00Z"
         }
-      ]
+      ],
+      "districtGraph": {
+        "nodes": [
+          {
+            "nodeId": "N-001",
+            "type": "intersection",
+            "name": "Main St & 1st Ave",
+            "location": {
+              "latitude": 40.7128,
+              "longitude": -74.0060
+            },
+            "trafficLight": {
+              "status": "green",
+              "timeRemaining": 25,
+              "cycleTime": 90
+            }
+          },
+          {
+            "nodeId": "N-002",
+            "type": "intersection",
+            "name": "Main St & 2nd Ave",
+            "location": {
+              "latitude": 40.7138,
+              "longitude": -74.0050
+            },
+            "trafficLight": {
+              "status": "red",
+              "timeRemaining": 15,
+              "cycleTime": 90
+            }
+          },
+          {
+            "nodeId": "N-005",
+            "type": "intersection",
+            "name": "Park Ave & 1st Ave",
+            "location": {
+              "latitude": 40.7125,
+              "longitude": -74.0080
+            },
+            "trafficLight": {
+              "status": "green",
+              "timeRemaining": 40,
+              "cycleTime": 90
+            }
+          }
+        ],
+        "edges": [
+          {
+            "edgeId": "E-001",
+            "roadSegmentId": "RS-101",
+            "name": "Main St (1st-2nd)",
+            "fromNode": "N-001",
+            "toNode": "N-002",
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [-74.0060, 40.7128],
+                [-74.0050, 40.7138]
+              ]
+            },
+            "distance": 150,
+            "speedLimit": 50,
+            "lanes": 3,
+            "direction": "bidirectional",
+            "trafficConditions": {
+              "averageSpeed": 35,
+              "congestionLevel": "moderate",
+              "vehicleCount": 45,
+              "travelTime": 15.4,
+              "incidents": []
+            },
+            "lastUpdated": "2025-12-04T10:30:00Z"
+          },
+          {
+            "edgeId": "E-005",
+            "roadSegmentId": "RS-105",
+            "name": "Park Ave (Main-1st)",
+            "fromNode": "N-005",
+            "toNode": "N-001",
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [-74.0080, 40.7125],
+                [-74.0060, 40.7128]
+              ]
+            },
+            "distance": 120,
+            "speedLimit": 40,
+            "lanes": 2,
+            "direction": "bidirectional",
+            "trafficConditions": {
+              "averageSpeed": 38,
+              "congestionLevel": "light",
+              "vehicleCount": 18,
+              "travelTime": 11.4,
+              "incidents": []
+            },
+            "lastUpdated": "2025-12-04T10:29:52Z"
+          }
+        ]
+      }
     },
     {
       "districtId": "DIST-002",
@@ -342,7 +442,153 @@
           "status": "active",
           "lastUpdated": "2025-12-04T10:29:55Z"
         }
-      ]
+      ],
+      "districtGraph": {
+        "nodes": [
+          {
+            "nodeId": "N-003",
+            "type": "intersection",
+            "name": "Broadway & 1st Ave",
+            "location": {
+              "latitude": 40.7145,
+              "longitude": -74.0070
+            },
+            "trafficLight": {
+              "status": "green",
+              "timeRemaining": 30,
+              "cycleTime": 120
+            }
+          },
+          {
+            "nodeId": "N-004",
+            "type": "intersection",
+            "name": "Broadway & 2nd Ave",
+            "location": {
+              "latitude": 40.7155,
+              "longitude": -74.0060
+            },
+            "trafficLight": {
+              "status": "yellow",
+              "timeRemaining": 5,
+              "cycleTime": 120
+            }
+          }
+        ],
+        "edges": [
+          {
+            "edgeId": "E-002",
+            "roadSegmentId": "RS-102",
+            "name": "Broadway (1st-2nd)",
+            "fromNode": "N-003",
+            "toNode": "N-004",
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [-74.0070, 40.7145],
+                [-74.0060, 40.7155]
+              ]
+            },
+            "distance": 180,
+            "speedLimit": 50,
+            "lanes": 4,
+            "direction": "bidirectional",
+            "trafficConditions": {
+              "averageSpeed": 42,
+              "congestionLevel": "light",
+              "vehicleCount": 32,
+              "travelTime": 15.4,
+              "incidents": []
+            },
+            "lastUpdated": "2025-12-04T10:29:55Z"
+          },
+          {
+            "edgeId": "E-003",
+            "roadSegmentId": "RS-103",
+            "name": "1st Ave (Main-Broadway)",
+            "fromNode": "N-001",
+            "toNode": "N-003",
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [-74.0060, 40.7128],
+                [-74.0070, 40.7145]
+              ]
+            },
+            "distance": 200,
+            "speedLimit": 50,
+            "lanes": 2,
+            "direction": "bidirectional",
+            "trafficConditions": {
+              "averageSpeed": 28,
+              "congestionLevel": "heavy",
+              "vehicleCount": 68,
+              "travelTime": 25.7,
+              "incidents": [
+                {
+                  "incidentId": "INC-001",
+                  "type": "construction",
+                  "severity": "medium",
+                  "description": "Lane closure for maintenance",
+                  "reportedAt": "2025-12-04T08:00:00Z"
+                }
+              ]
+            },
+            "lastUpdated": "2025-12-04T10:30:00Z"
+          },
+          {
+            "edgeId": "E-004",
+            "roadSegmentId": "RS-104",
+            "name": "2nd Ave (Main-Broadway)",
+            "fromNode": "N-002",
+            "toNode": "N-004",
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [-74.0050, 40.7138],
+                [-74.0060, 40.7155]
+              ]
+            },
+            "distance": 190,
+            "speedLimit": 50,
+            "lanes": 2,
+            "direction": "bidirectional",
+            "trafficConditions": {
+              "averageSpeed": 45,
+              "congestionLevel": "light",
+              "vehicleCount": 25,
+              "travelTime": 15.2,
+              "incidents": []
+            },
+            "lastUpdated": "2025-12-04T10:29:58Z"
+          },
+          {
+            "edgeId": "E-006",
+            "roadSegmentId": "RS-106",
+            "name": "Park Ave (Broadway-1st)",
+            "fromNode": "N-003",
+            "toNode": "N-005",
+            "geometry": {
+              "type": "LineString",
+              "coordinates": [
+                [-74.0070, 40.7145],
+                [-74.0080, 40.7125]
+              ]
+            },
+            "distance": 140,
+            "speedLimit": 40,
+            "lanes": 2,
+            "direction": "bidirectional",
+            "trafficConditions": {
+              "averageSpeed": 35,
+              "congestionLevel": "moderate",
+              "vehicleCount": 30,
+              "travelTime": 14.4,
+              "incidents": []
+            },
+            "lastUpdated": "2025-12-04T10:29:50Z"
+          }
+        ]
+      }
     },
     {
       "districtId": "DIST-003",
@@ -490,249 +736,13 @@
           "status": "active",
           "lastUpdated": "2025-12-04T10:29:58Z"
         }
-      ]
+      ],
+      "districtGraph": {
+        "nodes": [],
+        "edges": []
+      }
     }
   ],
-  "cityGraph": {
-    "nodes": [
-      {
-        "nodeId": "N-001",
-        "type": "intersection",
-        "name": "Main St & 1st Ave",
-        "location": {
-          "latitude": 40.7128,
-          "longitude": -74.0060
-        },
-        "trafficLight": {
-          "status": "green",
-          "timeRemaining": 25,
-          "cycleTime": 90
-        }
-      },
-      {
-        "nodeId": "N-002",
-        "type": "intersection",
-        "name": "Main St & 2nd Ave",
-        "location": {
-          "latitude": 40.7138,
-          "longitude": -74.0050
-        },
-        "trafficLight": {
-          "status": "red",
-          "timeRemaining": 15,
-          "cycleTime": 90
-        }
-      },
-      {
-        "nodeId": "N-003",
-        "type": "intersection",
-        "name": "Broadway & 1st Ave",
-        "location": {
-          "latitude": 40.7145,
-          "longitude": -74.0070
-        },
-        "trafficLight": {
-          "status": "green",
-          "timeRemaining": 30,
-          "cycleTime": 120
-        }
-      },
-      {
-        "nodeId": "N-004",
-        "type": "intersection",
-        "name": "Broadway & 2nd Ave",
-        "location": {
-          "latitude": 40.7155,
-          "longitude": -74.0060
-        },
-        "trafficLight": {
-          "status": "yellow",
-          "timeRemaining": 5,
-          "cycleTime": 120
-        }
-      },
-      {
-        "nodeId": "N-005",
-        "type": "intersection",
-        "name": "Park Ave & 1st Ave",
-        "location": {
-          "latitude": 40.7125,
-          "longitude": -74.0080
-        },
-        "trafficLight": {
-          "status": "green",
-          "timeRemaining": 40,
-          "cycleTime": 90
-        }
-      }
-    ],
-    "edges": [
-      {
-        "edgeId": "E-001",
-        "roadSegmentId": "RS-101",
-        "name": "Main St (1st-2nd)",
-        "fromNode": "N-001",
-        "toNode": "N-002",
-        "geometry": {
-          "type": "LineString",
-          "coordinates": [
-            [-74.0060, 40.7128],
-            [-74.0050, 40.7138]
-          ]
-        },
-        "distance": 150,
-        "speedLimit": 50,
-        "lanes": 3,
-        "direction": "bidirectional",
-        "trafficConditions": {
-          "averageSpeed": 35,
-          "congestionLevel": "moderate",
-          "vehicleCount": 45,
-          "travelTime": 15.4,
-          "incidents": []
-        },
-        "lastUpdated": "2025-12-04T10:30:00Z"
-      },
-      {
-        "edgeId": "E-002",
-        "roadSegmentId": "RS-102",
-        "name": "Broadway (1st-2nd)",
-        "fromNode": "N-003",
-        "toNode": "N-004",
-        "geometry": {
-          "type": "LineString",
-          "coordinates": [
-            [-74.0070, 40.7145],
-            [-74.0060, 40.7155]
-          ]
-        },
-        "distance": 180,
-        "speedLimit": 50,
-        "lanes": 4,
-        "direction": "bidirectional",
-        "trafficConditions": {
-          "averageSpeed": 42,
-          "congestionLevel": "light",
-          "vehicleCount": 32,
-          "travelTime": 15.4,
-          "incidents": []
-        },
-        "lastUpdated": "2025-12-04T10:29:55Z"
-      },
-      {
-        "edgeId": "E-003",
-        "roadSegmentId": "RS-103",
-        "name": "1st Ave (Main-Broadway)",
-        "fromNode": "N-001",
-        "toNode": "N-003",
-        "geometry": {
-          "type": "LineString",
-          "coordinates": [
-            [-74.0060, 40.7128],
-            [-74.0070, 40.7145]
-          ]
-        },
-        "distance": 200,
-        "speedLimit": 50,
-        "lanes": 2,
-        "direction": "bidirectional",
-        "trafficConditions": {
-          "averageSpeed": 28,
-          "congestionLevel": "heavy",
-          "vehicleCount": 68,
-          "travelTime": 25.7,
-          "incidents": [
-            {
-              "incidentId": "INC-001",
-              "type": "construction",
-              "severity": "medium",
-              "description": "Lane closure for maintenance",
-              "reportedAt": "2025-12-04T08:00:00Z"
-            }
-          ]
-        },
-        "lastUpdated": "2025-12-04T10:30:00Z"
-      },
-      {
-        "edgeId": "E-004",
-        "roadSegmentId": "RS-104",
-        "name": "2nd Ave (Main-Broadway)",
-        "fromNode": "N-002",
-        "toNode": "N-004",
-        "geometry": {
-          "type": "LineString",
-          "coordinates": [
-            [-74.0050, 40.7138],
-            [-74.0060, 40.7155]
-          ]
-        },
-        "distance": 190,
-        "speedLimit": 50,
-        "lanes": 2,
-        "direction": "bidirectional",
-        "trafficConditions": {
-          "averageSpeed": 45,
-          "congestionLevel": "light",
-          "vehicleCount": 25,
-          "travelTime": 15.2,
-          "incidents": []
-        },
-        "lastUpdated": "2025-12-04T10:29:58Z"
-      },
-      {
-        "edgeId": "E-005",
-        "roadSegmentId": "RS-105",
-        "name": "Park Ave (Main-1st)",
-        "fromNode": "N-005",
-        "toNode": "N-001",
-        "geometry": {
-          "type": "LineString",
-          "coordinates": [
-            [-74.0080, 40.7125],
-            [-74.0060, 40.7128]
-          ]
-        },
-        "distance": 120,
-        "speedLimit": 40,
-        "lanes": 2,
-        "direction": "bidirectional",
-        "trafficConditions": {
-          "averageSpeed": 38,
-          "congestionLevel": "light",
-          "vehicleCount": 18,
-          "travelTime": 11.4,
-          "incidents": []
-        },
-        "lastUpdated": "2025-12-04T10:29:52Z"
-      },
-      {
-        "edgeId": "E-006",
-        "roadSegmentId": "RS-106",
-        "name": "Park Ave (Broadway-1st)",
-        "fromNode": "N-003",
-        "toNode": "N-005",
-        "geometry": {
-          "type": "LineString",
-          "coordinates": [
-            [-74.0070, 40.7145],
-            [-74.0080, 40.7125]
-          ]
-        },
-        "distance": 140,
-        "speedLimit": 40,
-        "lanes": 2,
-        "direction": "bidirectional",
-        "trafficConditions": {
-          "averageSpeed": 35,
-          "congestionLevel": "moderate",
-          "vehicleCount": 30,
-          "travelTime": 14.4,
-          "incidents": []
-        },
-        "lastUpdated": "2025-12-04T10:29:50Z"
-      }
-    ]
-  },
   "publicTransport": {
     "buses": [
       {
