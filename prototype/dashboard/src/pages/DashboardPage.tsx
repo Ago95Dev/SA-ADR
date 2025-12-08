@@ -51,11 +51,11 @@ export function DashboardPage() {
     };
   }, [setConnectionState, applyIncrementalUpdate]);
 
-  // Collect all entities from all districts
+  // Collect all entities from districts and city
   const allSensors = cityState?.districts.flatMap((district) => district.sensors) || [];
   const allBuildings = cityState?.districts.flatMap((district) => district.buildings) || [];
   const allWeatherStations = cityState?.districts.flatMap((district) => district.weatherStations) || [];
-  const allRoadSegments = cityState?.districts.flatMap((district) => district.districtGraph.edges) || [];
+  const allRoadSegments = cityState?.cityGraph.edges || [];
   const allBuses = cityState?.publicTransport.buses || [];
 
   return (

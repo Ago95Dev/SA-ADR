@@ -161,7 +161,7 @@ export interface Edge {
   lastUpdated: Date | string;
 }
 
-export interface DistrictGraph {
+export interface CityGraph {
   nodes: Node[];
   edges: Edge[];
 }
@@ -173,7 +173,6 @@ export interface District {
   sensors: Sensor[];
   buildings: Building[];
   weatherStations: WeatherStation[];
-  districtGraph: DistrictGraph;
 }
 
 export interface Occupancy {
@@ -244,6 +243,7 @@ export interface City {
   districts: District[];
   publicTransport: PublicTransport;
   emergencyServices: EmergencyServices;
+  cityGraph: CityGraph;
 }
 
 // Alias for compatibility

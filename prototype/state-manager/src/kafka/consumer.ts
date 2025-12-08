@@ -101,6 +101,7 @@ export class KafkaConsumerManager {
       // Cache shared state
       this.stateCache.set('publicTransport', state.publicTransport);
       this.stateCache.set('emergencyServices', state.emergencyServices);
+      this.stateCache.set('cityGraph', state.cityGraph);
       
       logger.info(`Loaded state to cache: ${this.stateCache.size} entries`);
     } catch (error) {
@@ -204,7 +205,7 @@ export class KafkaConsumerManager {
         break;
 
       case 'traffic.graph':
-        this.updateTrafficGraphInCache(data);
+        this.updateCityGraphInCache(data);
         break;
 
       case 'transport.gps':
@@ -240,7 +241,6 @@ export class KafkaConsumerManager {
         sensors: [],
         buildings: [],
         weatherStations: [],
-        districtGraph: { nodes: [], edges: [] },
       };
       this.stateCache.set(cacheKey, district);
     }
@@ -306,20 +306,21 @@ export class KafkaConsumerManager {
   }
 
   /**
-   * Update traffic graph in cache
+   * Update city graph in cache
    */
-  private updateTrafficGraphInCache(data: any): void {
-    const { districtId, edgeId, trafficConditions } = data;
-    if (!districtId || !edgeId) return;
+  private updateCityGraphInCache(data: any): void {
+    const { edgeId, trafficConditions } = data;
+    if (!edgeId) return;
 
-    const district = this.stateCache.get(`district:${districtId}`);
-    if (!district) return;
+    let cityGraph = this.stateCache.get('cityGraph') || { nodes: [], edges: [] };
 
-    const edgeIndex = district.districtGraph.edges.findIndex((e: any) => e.edgeId === edgeId);
+    const edgeIndex = cityGraph.edges.findIndex((e: any) => e.edgeId === edgeId);
     if (edgeIndex !== -1) {
-      district.districtGraph.edges[edgeIndex].trafficConditions = trafficConditions;
-      district.districtGraph.edges[edgeIndex].lastUpdated = new Date();
+      cityGraph.edges[edgeIndex].trafficConditions = trafficConditions;
+      cityGraph.edges[edgeIndex].lastUpdated = new Date();
     }
+
+    this.stateCache.set('cityGraph', cityGraph);
   }
 
   /**
@@ -406,6 +407,9 @@ export class KafkaConsumerManager {
           operationCount++;
         } else if (key === 'emergencyServices') {
           pipeline.set('city:emergencyServices', JSON.stringify(value));
+          operationCount++;
+        } else if (key === 'cityGraph') {
+          pipeline.set('city:graph', JSON.stringify(value));
           operationCount++;
         }
       }

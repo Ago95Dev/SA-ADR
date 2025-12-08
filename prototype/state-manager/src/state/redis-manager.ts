@@ -5,7 +5,7 @@ import { logger } from '../utils/logger';
 export class RedisStateManager {
   private client: Redis;
   private readonly keyPrefix = 'district:';
-  // private readonly _cityGraphKey = 'city:graph';
+  private readonly cityGraphKey = 'city:graph';
   private readonly publicTransportKey = 'city:publicTransport';
   private readonly emergencyServicesKey = 'city:emergencyServices';
   private readonly cityMetadataKey = 'city:metadata';
@@ -40,7 +40,7 @@ export class RedisStateManager {
     await this.client.set(
       this.cityMetadataKey,
       JSON.stringify({
-        name: 'Smart City',
+        name: "L'Aquila",
         version: '1.0.0',
         lastUpdated: new Date().toISOString(),
       })
@@ -50,7 +50,32 @@ export class RedisStateManager {
     await this.client.set(this.publicTransportKey, JSON.stringify({ buses: [], stations: [] }));
     await this.client.set(this.emergencyServicesKey, JSON.stringify({ incidents: [], units: [] }));
 
+    // Load and initialize city graph from L'Aquila data
+    await this.initializeCityGraph();
+
     logger.info('Empty state initialized successfully');
+  }
+
+  /**
+   * Initialize city graph with L'Aquila data
+   */
+  private async initializeCityGraph(): Promise<void> {
+    try {
+      const fs = await import('fs/promises');
+      const path = await import('path');
+      
+      const graphPath = path.join(__dirname, 'laquila-city-graph-overture.json');
+      const graphData = await fs.readFile(graphPath, 'utf-8');
+      const graph = JSON.parse(graphData);
+      
+      await this.client.set(this.cityGraphKey, JSON.stringify(graph));
+      logger.info(`Initialized city graph with ${graph.nodes?.length || 0} nodes and ${graph.edges?.length || 0} edges`);
+    } catch (error) {
+      logger.error('Error loading city graph:', error);
+      // Initialize with empty graph if file not found
+      await this.client.set(this.cityGraphKey, JSON.stringify({ nodes: [], edges: [] }));
+      logger.warn('Initialized with empty city graph');
+    }
   }
 
   /**
@@ -110,24 +135,26 @@ export class RedisStateManager {
    * Get complete city state
    */
   async getCompleteState(): Promise<City> {
-    const [metadata, districts, publicTransport, emergencyServices] = await Promise.all([
+    const [metadata, districts, publicTransport, emergencyServices, cityGraph] = await Promise.all([
       this.getCityMetadata(),
       this.getAllDistricts(),
       this.getPublicTransport(),
       this.getEmergencyServices(),
+      this.getCityGraph(),
     ]);
 
     return {
-      cityId: 'CITY-001',
+      cityId: 'laquila',
       timestamp: new Date(),
       metadata: metadata || {
-        name: 'Smart City',
+        name: "L'Aquila",
         version: '1.0.0',
         lastUpdated: new Date(),
       },
       districts,
       publicTransport: publicTransport || { buses: [], stations: [] },
       emergencyServices: emergencyServices || { incidents: [], units: [] },
+      cityGraph: cityGraph || { nodes: [], edges: [] },
     };
   }
 
@@ -172,6 +199,22 @@ export class RedisStateManager {
   }
 
   /**
+   * Get city graph data
+   */
+  async getCityGraph() {
+    const data = await this.client.get(this.cityGraphKey);
+    return data ? JSON.parse(data) : null;
+  }
+
+  /**
+   * Update city graph data
+   */
+  async updateCityGraph(data: any): Promise<void> {
+    await this.client.set(this.cityGraphKey, JSON.stringify(data));
+    logger.debug('Updated city graph data');
+  }
+
+  /**
    * Merge sensor data into district
    */
   async mergeSensorData(districtId: string, sensorData: any): Promise<void> {
@@ -190,7 +233,6 @@ export class RedisStateManager {
         sensors: [sensorData],
         buildings: [],
         weatherStations: [],
-        districtGraph: { nodes: [], edges: [] },
       };
       await this.updateDistrictState(newDistrict);
       return;
