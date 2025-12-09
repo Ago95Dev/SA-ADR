@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: state-manager
+spec:
+  type: LoadBalancer
+  selector:
+    app: state-manager
+  ports:
+    - protocol: TCP
+      name: api
+      port: 3000
+      targetPort: 3000
+    - protocol: TCP
+      name: websocket
+      port: 3001
+      targetPort: 3001
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: state-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: state-manager
+  template:
+    metadata:
+      labels:
+        app: state-manager
+    spec:
+      containers:
+        - name: state-manager
+          image: digital-twin/state-manager:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+            - containerPort: 3001
+          envFrom:
+            - configMapRef:
+                name: digital-twin-config
+          env:
+            - name: MONGODB_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: digital-twin-config
+                  key: MONGODB_URI_STATE
+            - name: MONGODB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: digital-twin-config
+                  key: MONGODB_DATABASE_STATE
+            - name: KAFKA_GROUP_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: digital-twin-config
+                  key: KAFKA_GROUP_ID_STATE
+            - name: KAFKA_CLIENT_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: digital-twin-config
+                  key: KAFKA_CLIENT_ID_STATE

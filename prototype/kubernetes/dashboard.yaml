@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard
+spec:
+  type: LoadBalancer
+  selector:
+    app: dashboard
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dashboard
+  template:
+    metadata:
+      labels:
+        app: dashboard
+    spec:
+      containers:
+        - name: dashboard
+          image: digital-twin/dashboard:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          # Note: Vite vars are usually build-time.
+          # For runtime config in Docker, we typically strictly rely on the build args or a runtime replacement script.
+          # The Dockerfile likely uses build args.
+          # If the user builds the image as per instructions, they should bake these in.
+          # Here we can't easily change VITE_ vars at runtime unless the entrypoint supports it.
+          # We'll assume the image is built with defaults or the user follows the plan to build it.
+          # However, to be helpful, if the Dockerfile supports ENV override (some setups do), we provide them.
+          env:
+            - name: VITE_STATE_MANAGER_API_URL
+              value: "http://localhost:3000"
+            - name: VITE_STATE_MANAGER_WS_URL
+              value: "ws://localhost:3001"
+            - name: VITE_NOTIFICATION_MANAGER_API_URL
+              value: "http://localhost:3002/api"

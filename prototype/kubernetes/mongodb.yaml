@@ -1,0 +1,118 @@
+# MongoDB State
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-state
+spec:
+  selector:
+    app: mongodb-state
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb-state
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb-state
+  template:
+    metadata:
+      labels:
+        app: mongodb-state
+    spec:
+      containers:
+        - name: mongodb-state
+          image: mongo:6
+          ports:
+            - containerPort: 27017
+          env:
+            - name: MONGO_INITDB_DATABASE
+              value: digital_twin
+          volumeMounts:
+            - name: mongodb-state-data
+              mountPath: /data/db
+          livenessProbe:
+            exec:
+              command: ["mongosh", "--eval", "db.adminCommand('ping')"]
+            initialDelaySeconds: 15
+            periodSeconds: 10
+      volumes:
+        - name: mongodb-state-data
+          persistentVolumeClaim:
+            claimName: mongodb-state-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongodb-state-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+# MongoDB Notifications
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-notifications
+spec:
+  selector:
+    app: mongodb-notifications
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb-notifications
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb-notifications
+  template:
+    metadata:
+      labels:
+        app: mongodb-notifications
+    spec:
+      containers:
+        - name: mongodb-notifications
+          image: mongo:6
+          ports:
+            - containerPort: 27017
+          env:
+            - name: MONGO_INITDB_DATABASE
+              value: notifications
+          volumeMounts:
+            - name: mongodb-notifications-data
+              mountPath: /data/db
+          livenessProbe:
+            exec:
+              command: ["mongosh", "--eval", "db.adminCommand('ping')"]
+            initialDelaySeconds: 15
+            periodSeconds: 10
+      volumes:
+        - name: mongodb-notifications-data
+          persistentVolumeClaim:
+            claimName: mongodb-notifications-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongodb-notifications-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
