@@ -4,6 +4,8 @@ import org.jetbrains.annotations.Async.Schedule;
 import org.swarch.servicies.CheckSymptomsService;
 import org.swarch.servicies.GetSensorDataService;
 
+import jakarta.inject.Inject;
+
 /**
  * This class job is to constantly call the scheduled method retriveData() to
  * get the sensors values, and checks possible symptoms in the
@@ -11,13 +13,10 @@ import org.swarch.servicies.GetSensorDataService;
  */
 public class retriveSensorData {
 
-  private final GetSensorDataService getSensorDataService;
-  private final CheckSymptomsService checkSymptomsService;
-
-  public retriveSensorData(GetSensorDataService getSensorDataService, CheckSymptomsService checkSymptomsService) {
-    this.checkSymptomsService = checkSymptomsService;
-    this.getSensorDataService = getSensorDataService;
-  }
+  @Inject
+  GetSensorDataService getSensorDataService;
+  @Inject
+  CheckSymptomsService checkSymptomsService;
 
   @Schedule
   public void retriveData() {

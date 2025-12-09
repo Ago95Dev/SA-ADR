@@ -3,9 +3,12 @@ package org.swarch.servicies;
 import org.swarch.Plan;
 import org.swarch.Symptom;
 
+import jakarta.enterprise.context.ApplicationScoped;
+
 /**
  * PlanForSymptomServiceImpl
  */
+@ApplicationScoped
 public class PlanForSymptomServiceImpl implements PlanForSymptomService {
 
   @Override

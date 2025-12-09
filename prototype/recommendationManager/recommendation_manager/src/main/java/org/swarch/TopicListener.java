@@ -2,16 +2,14 @@ package org.swarch;
 
 import org.swarch.servicies.PlanForSymptomService;
 
+import jakarta.inject.Inject;
+
 /**
  * TODO: adapt for kafka topic listening
  */
 public class TopicListener {
-  private final PlanForSymptomService planforSymptomService;
-
-  public TopicListener(PlanForSymptomService planForSymptomService) {
-    this.planforSymptomService = planForSymptomService;
-
-  }
+  @Inject
+  PlanForSymptomService planforSymptomService;
 
   void extract_symptoms() {
     System.out.println("########################################");
