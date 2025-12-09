@@ -8,6 +8,11 @@ cleanup() {
 
 trap cleanup EXIT
 
+echo "Waiting for all pods to be ready..."
+kubectl wait --for=condition=ready pod -l app=dashboard --timeout=60s
+kubectl wait --for=condition=ready pod -l app=state-manager --timeout=60s
+kubectl wait --for=condition=ready pod -l app=notification-manager --timeout=60s
+
 echo "Starting port-forwarding for Dashboard and dependencies..."
 
 # Dashboard FE
