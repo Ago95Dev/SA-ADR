@@ -9,7 +9,7 @@ spec:
   ports:
     - protocol: TCP
       name: http
-      port: 8080
+      port: 8081
       targetPort: 8080
 ---
 apiVersion: apps/v1
@@ -51,13 +51,13 @@ spec:
               cpu: "500m"
           livenessProbe:
             httpGet:
-              path: /q/health/live
+              path: /hello
               port: 8080
             initialDelaySeconds: 30
             periodSeconds: 10
           readinessProbe:
             httpGet:
-              path: /q/health/ready
+              path: /hello
               port: 8080
             initialDelaySeconds: 5
             periodSeconds: 5
