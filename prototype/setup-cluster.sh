@@ -20,6 +20,11 @@ docker build -t digital-twin/notification-manager:latest ./notification-manager
 # Data Producer
 docker build -t digital-twin/data-producer:latest ./producer
 
+# Recommendation Manager
+echo -e "${BLUE}Building Recommendation Manager (digital-twin/recommendation-manager:latest)...${NC}"
+docker build -t digital-twin/recommendation-manager:latest ./recommendationManager
+echo -e "${GREEN}Successfully built Recommendation Manager${NC}"
+
 # Dashboard
 echo -e "${BLUE}Building Dashboard (digital-twin/dashboard:latest)...${NC}"
 docker build \
@@ -36,6 +41,7 @@ if [ "$(kubectl config current-context)" = "minikube" ]; then
     minikube image load digital-twin/state-manager:latest
     minikube image load digital-twin/notification-manager:latest
     minikube image load digital-twin/data-producer:latest
+    minikube image load digital-twin/recommendation-manager:latest
     minikube image load digital-twin/dashboard:latest
     echo -e "${GREEN}Images loaded into Minikube${NC}"
 fi
@@ -55,6 +61,7 @@ echo -e "\n${GREEN}Setup Complete!${NC}"
 echo -e "Access the Dashboard at: http://localhost:8080"
 echo -e "Access the State Manager API at: http://localhost:3000"
 echo -e "Access the Notification Manager API at: http://localhost:3002/api"
+echo -e "Access the Recommendation Manager at: http://localhost:8081"
 
 # Run access-dashboard.sh script
 ./access-dashboard.sh

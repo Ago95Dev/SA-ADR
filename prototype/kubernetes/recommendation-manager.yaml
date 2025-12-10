@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: recommendation-manager
+spec:
+  type: ClusterIP
+  selector:
+    app: recommendation-manager
+  ports:
+    - protocol: TCP
+      name: http
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recommendation-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: recommendation-manager
+  template:
+    metadata:
+      labels:
+        app: recommendation-manager
+    spec:
+      containers:
+        - name: recommendation-manager
+          image: digital-twin/recommendation-manager:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: digital-twin-config
+                  key: KAFKA_BROKERS
+            - name: QUARKUS_HTTP_HOST
+              value: "0.0.0.0"
+            - name: QUARKUS_HTTP_PORT
+              value: "8080"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /q/health/live
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /q/health/ready
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
