@@ -47,6 +47,7 @@ def create_kafka_producer(
         Exception: If connection fails after all retries
     """
     logger.info(f"🔄 Initializing Kafka producer (bootstrap: {bootstrap_servers})...")
+    logger.info(f"Bootstrap servers: {bootstrap_servers.split(",")}")
     
     for attempt in range(1, max_retries + 1):
         try:

@@ -1,0 +1,118 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: influxdb-init-buckets
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "1"
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    metadata:
+      labels:
+        app: influxdb-init
+    spec:
+      restartPolicy: OnFailure
+      initContainers:
+        # Wait for InfluxDB to be ready
+        - name: wait-for-influxdb
+          image: curlimages/curl:latest
+          command:
+            - sh
+            - -c
+            - |
+              echo "Waiting for InfluxDB to be ready..."
+              until curl -sf http://influxdb:8086/health | grep -q '"status":"pass"'; do
+                echo "Waiting for InfluxDB..."
+                sleep 5
+              done
+              echo "InfluxDB is ready!"
+      containers:
+        - name: create-buckets
+          image: python:3.11-alpine
+          env:
+            - name: INFLUXDB_URL
+              value: "http://influxdb:8086"
+            - name: INFLUXDB_TOKEN
+              valueFrom:
+                configMapKeyRef:
+                  name: digital-twin-config
+                  key: INFLUXDB_TOKEN
+            - name: INFLUXDB_ORG
+              valueFrom:
+                configMapKeyRef:
+                  name: digital-twin-config
+                  key: INFLUXDB_ORG
+          command:
+            - python3
+            - -c
+            - |
+              import os
+              import json
+              import urllib.request
+              import urllib.error
+              
+              INFLUXDB_URL = os.environ['INFLUXDB_URL']
+              TOKEN = os.environ['INFLUXDB_TOKEN']
+              ORG_NAME = os.environ['INFLUXDB_ORG']
+              
+              BUCKETS = ['city_metrics', 'vehicles_metrics', 'buildings_metrics']
+              
+              def api_request(endpoint, method='GET', data=None):
+                  url = f"{INFLUXDB_URL}{endpoint}"
+                  headers = {'Authorization': f'Token {TOKEN}'}
+                  if data:
+                      headers['Content-Type'] = 'application/json'
+                      data = json.dumps(data).encode('utf-8')
+                  req = urllib.request.Request(url, data=data, headers=headers, method=method)
+                  try:
+                      with urllib.request.urlopen(req) as response:
+                          return json.loads(response.read().decode('utf-8'))
+                  except urllib.error.HTTPError as e:
+                      print(f"HTTP Error: {e.code} - {e.read().decode('utf-8')}")
+                      raise
+              
+              print("=== InfluxDB Bucket Initialization ===")
+              print(f"URL: {INFLUXDB_URL}")
+              print(f"Org: {ORG_NAME}")
+              
+              # Get organization ID
+              print("\\nFetching organization...")
+              orgs_response = api_request('/api/v2/orgs')
+              org_id = None
+              for org in orgs_response.get('orgs', []):
+                  if org['name'] == ORG_NAME:
+                      org_id = org['id']
+                      break
+              
+              if not org_id:
+                  print(f"ERROR: Organization '{ORG_NAME}' not found")
+                  exit(1)
+              
+              print(f"Organization ID: {org_id}")
+              
+              # Create buckets
+              for bucket_name in BUCKETS:
+                  print(f"\\nProcessing bucket: {bucket_name}")
+                  
+                  # Check if exists
+                  buckets_response = api_request(f'/api/v2/buckets?name={bucket_name}')
+                  
+                  bucket_exists = any(b['name'] == bucket_name for b in buckets_response.get('buckets', []))
+                  
+                  if bucket_exists:
+                      print(f"  ✓ Bucket '{bucket_name}' already exists")
+                  else:
+                      print(f"  Creating bucket '{bucket_name}'...")
+                      create_data = {
+                          'name': bucket_name,
+                          'orgID': org_id,
+                          'retentionRules': []
+                      }
+                      result = api_request('/api/v2/buckets', method='POST', data=create_data)
+                      print(f"  ✓ Created bucket '{bucket_name}'")
+              
+              print("\\n=== Bucket initialization completed successfully ===")
+              print("Buckets available:")
+              for bucket_name in BUCKETS:
+                  print(f"  ✓ {bucket_name}")

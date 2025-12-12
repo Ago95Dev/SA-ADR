@@ -41,6 +41,8 @@ spec:
             # We'll use the service name 'kafka' to match existing configmap.
             - name: KAFKA_ADVERTISED_LISTENERS
               value: "PLAINTEXT://kafka:9092"
+            - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+              value: "PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT"
             - name: KAFKA_LOG_DIRS
               value: "/var/lib/kafka/data"
             # Increase message size limit to 10MB

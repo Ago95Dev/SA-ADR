@@ -25,6 +25,23 @@ data:
   KAFKA_CLIENT_ID_NOTIFICATIONS: "notification-manager"
   KAFKA_CLIENT_ID_PRODUCER: "data-producer"
 
+  # Kafka Topics
+  KAFKA_TOPIC_SPEED: "city-speed-sensors"
+  KAFKA_TOPIC_WEATHER: "city-weather-sensors"
+  KAFKA_TOPIC_CAMERA: "city-camera-sensors"
+  KAFKA_TOPIC_VEHICLES: "vehicles-telemetry"
+  KAFKA_TOPIC_BUILDINGS: "buildings-monitoring"
+
+  # InfluxDB
+  INFLUXDB_URL: "http://influxdb:8086"
+  INFLUXDB_TOKEN: "digital-twin-admin-token"
+  INFLUXDB_ORG: "emergency-mgmt"
+  INFLUXDB_BUCKET_CITY: "city_metrics"
+  INFLUXDB_BUCKET_VEHICLES: "vehicles_metrics"
+  INFLUXDB_BUCKET_BUILDINGS: "buildings_metrics"
+  INFLUXDB_ADMIN_USER: "admin"
+  INFLUXDB_ADMIN_PASSWORD: "adminpassword"
+
   # App Configuration
   API_PORT: "3000"
   WEBSOCKET_PORT: "3001"
