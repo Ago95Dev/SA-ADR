@@ -11,7 +11,7 @@ import jakarta.inject.Inject;
  * get the sensors values, and checks possible symptoms in the
  * checkSymptomsService
  */
-public class retriveSensorData {
+public class RetriveSensorData {
 
   @Inject
   GetSensorDataService getSensorDataService;

@@ -8,11 +8,12 @@ NC='\033[0m' # No Color
 
 echo -e "${BLUE}Starting Digital Twin Kubernetes Setup...${NC}"
 
-# NOTE: only for alessandros PC 
+# NOTE: only for alessandro's PC 
 # 0 pull images
 docker pull apache/kafka:latest
 docker pull redis:7-alpine
 docker pull mongo:6
+docker pull influxdb:2.7-alpine
 
 # 1. Build Images locally
 echo -e "\n${BLUE}--- Step 1: Building Docker Images Locally ---${NC}"
@@ -74,10 +75,17 @@ echo -e "${GREEN}Successfully built Dashboard${NC}"
 if [ "$(kubectl config current-context)" = "minikube" ]; then
     echo -e "\n${BLUE}--- Step 1.5: Loading Images into Minikube ---${NC}"
     echo "This may take a minute..."
+
+    # tools
+    minikube image load influxdb:2.7-alpine
+    minikube image load redis:7-alpine
+    minikube image load mongo:6
+    minikube image load apache/kafka:latest
+    # applications
     minikube image load digital-twin/state-manager:latest
     minikube image load digital-twin/notification-manager:latest
     minikube image load digital-twin/data-producer:latest
-    # minikube image load digital-twin/recommendation-manager:latest 
+    minikube image load digital-twin/recommendation-manager:latest 
     minikube image load digital-twin/city-simulator:latest
     minikube image load digital-twin/vehicles-simulator:latest
     minikube image load digital-twin/buildings-simulator:latest
@@ -85,9 +93,6 @@ if [ "$(kubectl config current-context)" = "minikube" ]; then
     minikube image load digital-twin/vehicles-monitor:latest
     minikube image load digital-twin/buildings-monitor:latest
     minikube image load digital-twin/dashboard:latest
-    minikube image load apache/kafka:latest
-    minikube image load redis:7-alpine
-    minikube image load mongo:6
     echo -e "${GREEN}Images loaded into Minikube${NC}"
 fi
 
