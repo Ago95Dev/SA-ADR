@@ -281,6 +281,7 @@ export class RedisStateManager {
         sensors: [sensorData],
         buildings: [],
         weatherStations: [],
+        gateways: [],
       };
       await this.updateDistrictState(newDistrict);
       return;

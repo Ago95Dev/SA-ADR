@@ -4,76 +4,56 @@ import { SnapshotManager } from '../state/snapshot-manager';
 import { logger } from '../utils/logger';
 
 /**
- * City-Simulator Sensor Message Types
- * These represent the data formats sent by the city-simulator edge managers
+ * City-Simulator Gateway Message Types
+ * These represent the new unified gateway payload format
  */
-interface SpeedSensorReading {
+
+// Individual sensor reading from gateway
+interface GatewaySensorReading {
   sensor_id: string;
-  speed_kmh: number;
-  latitude: number;
-  longitude: number;
-}
-
-interface SpeedSensorMessage {
-  district_id: string;
+  sensor_type: string;  // 'speed' | 'weather' | 'camera'
+  gateway_id: string;
   edge_id: string;
-  sensor_type: 'speed';
-  timestamp: string;
   latitude: number;
   longitude: number;
-  speed_kmh: number;
-  sensor_count: number;
-  sensor_readings: SpeedSensorReading[];
-  sample_count: number;
+  unit: string;
+  status: string;
+  // Speed sensor fields
+  speed_kmh?: number;
+  // Weather sensor fields
+  temperature_c?: number;
+  humidity?: number;
+  weather_conditions?: string;
+  // Camera sensor fields
+  road_condition?: string;
+  confidence?: number;
+  vehicle_count?: number;
 }
 
-interface WeatherSensorReading {
-  sensor_id: string;
-  temperature_c: number;
-  humidity: number;
-  latitude: number;
-  longitude: number;
+// Gateway metadata
+interface GatewayMetadata {
+  name: string;
+  version: string;
+  firmware: string;
+  sensor_counts: {
+    speed: number;
+    weather: number;
+    camera: number;
+  };
 }
 
-interface WeatherSensorMessage {
+// Gateway message payload
+interface GatewayMessage {
+  gateway_id: string;
   district_id: string;
-  edge_id: string;
-  sensor_type: 'weather';
-  timestamp: string;
-  latitude: number;
-  longitude: number;
-  temperature_c: number;
-  humidity: number;
-  weather_conditions: string;
-  sensor_count: number;
-  sensor_readings: WeatherSensorReading[];
-  sample_count: number;
+  location: {
+    latitude: number;
+    longitude: number;
+  };
+  last_updated: string;
+  metadata: GatewayMetadata;
+  sensors: GatewaySensorReading[];  // Each sensor has its own edge_id
 }
-
-interface CameraSensorReading {
-  sensor_id: string;
-  road_condition: string;
-  confidence: number;
-  vehicle_count: number;
-  latitude: number;
-  longitude: number;
-}
-
-interface CameraSensorMessage {
-  district_id: string;
-  edge_id: string;
-  sensor_type: 'camera';
-  timestamp: string;
-  latitude: number;
-  longitude: number;
-  road_condition: string;
-  confidence: number;
-  vehicle_count: number;
-  sensor_count: number;
-  sensor_readings: CameraSensorReading[];
-}
-
-// type CitySensorMessage = SpeedSensorMessage | WeatherSensorMessage | CameraSensorMessage;
 
 /**
  * Buildings-Simulator Message Types
@@ -220,9 +200,7 @@ export class KafkaConsumerManager {
 
   // Topics from environment variables (configured in k8s configmap)
   private readonly topics = [
-    process.env.KAFKA_TOPIC_SPEED || 'city-speed-sensors',
-    process.env.KAFKA_TOPIC_WEATHER || 'city-weather-sensors',
-    process.env.KAFKA_TOPIC_CAMERA || 'city-camera-sensors',
+    process.env.KAFKA_TOPIC_GATEWAY || 'city-gateway-data',
     process.env.KAFKA_TOPIC_BUILDINGS || 'buildings-monitoring',
     process.env.KAFKA_TOPIC_VEHICLES || 'vehicles-telemetry',
   ];
@@ -383,26 +361,16 @@ export class KafkaConsumerManager {
 
   /**
    * Process message updates in memory cache (no Redis I/O)
-   * Updated to handle city-simulator, buildings, and vehicles data formats
+   * Updated to handle gateway, buildings, and vehicles data formats
    */
   private async processMessageInMemory(topic: string, data: any): Promise<void> {
-    const speedTopic = process.env.KAFKA_TOPIC_SPEED || 'city-speed-sensors';
-    const weatherTopic = process.env.KAFKA_TOPIC_WEATHER || 'city-weather-sensors';
-    const cameraTopic = process.env.KAFKA_TOPIC_CAMERA || 'city-camera-sensors';
+    const gatewayTopic = process.env.KAFKA_TOPIC_GATEWAY || 'city-gateway-data';
     const buildingsTopic = process.env.KAFKA_TOPIC_BUILDINGS || 'buildings-monitoring';
     const vehiclesTopic = process.env.KAFKA_TOPIC_VEHICLES || 'vehicles-telemetry';
 
     switch (topic) {
-      case speedTopic:
-        this.updateSpeedSensorInCache(data as SpeedSensorMessage);
-        break;
-
-      case weatherTopic:
-        this.updateWeatherSensorInCache(data as WeatherSensorMessage);
-        break;
-
-      case cameraTopic:
-        this.updateCameraSensorInCache(data as CameraSensorMessage);
+      case gatewayTopic:
+        this.updateGatewayInCache(data as GatewayMessage);
         break;
 
       case buildingsTopic:
@@ -416,140 +384,164 @@ export class KafkaConsumerManager {
   }
 
   /**
-   * Update speed sensor data in cache (from city-simulator)
-   * Creates edge-level aggregated speed data
+   * Update gateway data in cache (from city-simulator)
+   * Stores gateway with all its sensors
    */
-  private updateSpeedSensorInCache(data: SpeedSensorMessage): void {
-    const { district_id, edge_id, speed_kmh, sensor_count, sensor_readings, timestamp, latitude, longitude } = data;
-    if (!district_id || !edge_id) return;
+  private updateGatewayInCache(data: GatewayMessage): void {
+    const { gateway_id, district_id, location, last_updated, metadata, sensors } = data;
+    if (!gateway_id || !district_id) return;
 
     const cacheKey = `district:${district_id}`;
     let district = this.stateCache.get(cacheKey);
 
     if (!district) {
-      district = this.createEmptyDistrict(district_id, latitude, longitude);
+      district = this.createEmptyDistrict(district_id, location.latitude, location.longitude);
       this.stateCache.set(cacheKey, district);
     }
 
-    // Find or create edge sensor entry
-    const sensorId = `speed-${edge_id}`;
-    const sensorIndex = district.sensors.findIndex((s: any) => s.sensorId === sensorId);
+    // Ensure gateways array exists
+    if (!district.gateways) {
+      district.gateways = [];
+    }
 
-    const sensorData = {
-      sensorId,
-      type: 'speed',
-      edgeId: edge_id,
-      value: speed_kmh,
-      unit: 'km/h',
-      status: 'active',
-      lastUpdated: new Date(timestamp),
-      location: { latitude, longitude },
-      metadata: {
-        avgSpeed: speed_kmh,
-        sensorCount: sensor_count,
-        readings: sensor_readings,
+    // Find or create gateway entry
+    const gatewayIndex = district.gateways.findIndex((g: any) => g.gatewayId === gateway_id);
+
+    // Transform sensors to camelCase
+    const transformedSensors = sensors.map((s: GatewaySensorReading) => ({
+      sensorId: s.sensor_id,
+      sensorType: s.sensor_type,
+      gatewayId: s.gateway_id,
+      edgeId: s.edge_id,
+      latitude: s.latitude,
+      longitude: s.longitude,
+      unit: s.unit,
+      status: s.status,
+      // Speed sensor fields
+      speedKmh: s.speed_kmh,
+      // Weather sensor fields
+      temperatureC: s.temperature_c,
+      humidity: s.humidity,
+      weatherConditions: s.weather_conditions,
+      // Camera sensor fields
+      roadCondition: s.road_condition,
+      confidence: s.confidence,
+      vehicleCount: s.vehicle_count,
+    }));
+
+    const gatewayData = {
+      gatewayId: gateway_id,
+      name: metadata.name,
+      location: {
+        latitude: location.latitude,
+        longitude: location.longitude,
       },
-    };
-
-    if (sensorIndex !== -1) {
-      district.sensors[sensorIndex] = sensorData;
-    } else {
-      district.sensors.push(sensorData);
-    }
-  }
-
-  /**
-   * Update weather sensor data in cache (from city-simulator)
-   * Creates edge-level aggregated weather data
-   */
-  private updateWeatherSensorInCache(data: WeatherSensorMessage): void {
-    const { district_id, edge_id, temperature_c, humidity, weather_conditions, sensor_count, sensor_readings, timestamp, latitude, longitude } = data;
-    if (!district_id || !edge_id) return;
-
-    const cacheKey = `district:${district_id}`;
-    let district = this.stateCache.get(cacheKey);
-
-    if (!district) {
-      district = this.createEmptyDistrict(district_id, latitude, longitude);
-      this.stateCache.set(cacheKey, district);
-    }
-
-    // Find or create weather station entry
-    const stationId = `weather-${edge_id}`;
-    const stationIndex = district.weatherStations.findIndex((ws: any) => ws.stationId === stationId);
-
-    const stationData = {
-      stationId,
-      name: `Weather Station ${edge_id}`,
-      edgeId: edge_id,
-      location: { latitude, longitude, elevation: 0 },
-      readings: {
-        temperature: temperature_c,
-        humidity,
-        weatherConditions: weather_conditions,
-        units: {
-          temperature: '°C',
-          humidity: '%',
+      lastUpdated: new Date(last_updated),
+      metadata: {
+        name: metadata.name,
+        version: metadata.version,
+        firmware: metadata.firmware,
+        sensorCounts: {
+          speed: metadata.sensor_counts.speed,
+          weather: metadata.sensor_counts.weather,
+          camera: metadata.sensor_counts.camera,
         },
       },
-      status: 'active',
-      lastUpdated: new Date(timestamp),
-      metadata: {
-        sensorCount: sensor_count,
-        readings: sensor_readings,
-      },
+      sensors: transformedSensors,
     };
 
-    if (stationIndex !== -1) {
-      district.weatherStations[stationIndex] = stationData;
+    if (gatewayIndex !== -1) {
+      district.gateways[gatewayIndex] = gatewayData;
     } else {
-      district.weatherStations.push(stationData);
+      district.gateways.push(gatewayData);
     }
+
+    // Also update sensors and weather stations for backwards compatibility
+    this.updateSensorsFromGateway(district, transformedSensors, last_updated);
   }
 
   /**
-   * Update camera sensor data in cache (from city-simulator)
-   * Creates edge-level road condition analytics
+   * Update sensors and weather stations from gateway data for backwards compatibility
    */
-  private updateCameraSensorInCache(data: CameraSensorMessage): void {
-    const { district_id, edge_id, road_condition, confidence, vehicle_count, sensor_count, sensor_readings, timestamp, latitude, longitude } = data;
-    if (!district_id || !edge_id) return;
+  private updateSensorsFromGateway(district: any, sensors: any[], timestamp: string): void {
+    for (const sensor of sensors) {
+      if (sensor.sensorType === 'speed') {
+        const sensorId = sensor.sensorId;
+        const sensorIndex = district.sensors.findIndex((s: any) => s.sensorId === sensorId);
 
-    const cacheKey = `district:${district_id}`;
-    let district = this.stateCache.get(cacheKey);
+        const sensorData = {
+          sensorId,
+          type: 'speed',
+          edgeId: sensor.edgeId,
+          gatewayId: sensor.gatewayId,
+          value: sensor.speedKmh || 0,
+          unit: sensor.unit || 'km/h',
+          status: sensor.status || 'active',
+          lastUpdated: new Date(timestamp),
+          location: { latitude: sensor.latitude, longitude: sensor.longitude },
+        };
 
-    if (!district) {
-      district = this.createEmptyDistrict(district_id, latitude, longitude);
-      this.stateCache.set(cacheKey, district);
-    }
+        if (sensorIndex !== -1) {
+          district.sensors[sensorIndex] = sensorData;
+        } else {
+          district.sensors.push(sensorData);
+        }
+      } else if (sensor.sensorType === 'weather') {
+        const stationId = sensor.sensorId;
+        const stationIndex = district.weatherStations.findIndex((ws: any) => ws.stationId === stationId);
 
-    // Find or create camera sensor entry
-    const sensorId = `camera-${edge_id}`;
-    const sensorIndex = district.sensors.findIndex((s: any) => s.sensorId === sensorId);
+        const stationData = {
+          stationId,
+          name: `Weather Station ${sensor.edgeId}`,
+          edgeId: sensor.edgeId,
+          gatewayId: sensor.gatewayId,
+          location: { latitude: sensor.latitude, longitude: sensor.longitude, elevation: 0 },
+          readings: {
+            temperature: sensor.temperatureC || 0,
+            humidity: sensor.humidity || 0,
+            weatherConditions: sensor.weatherConditions || 'unknown',
+            units: {
+              temperature: '°C',
+              humidity: '%',
+            },
+          },
+          status: sensor.status || 'active',
+          lastUpdated: new Date(timestamp),
+        };
 
-    const sensorData = {
-      sensorId,
-      type: 'camera',
-      edgeId: edge_id,
-      value: vehicle_count,
-      unit: 'vehicles',
-      status: 'active',
-      lastUpdated: new Date(timestamp),
-      location: { latitude, longitude },
-      metadata: {
-        roadCondition: road_condition,
-        confidence,
-        vehicleCount: vehicle_count,
-        sensorCount: sensor_count,
-        readings: sensor_readings,
-        congestionStatus: this.calculateCongestionStatus(road_condition),
-      },
-    };
+        if (stationIndex !== -1) {
+          district.weatherStations[stationIndex] = stationData;
+        } else {
+          district.weatherStations.push(stationData);
+        }
+      } else if (sensor.sensorType === 'camera') {
+        const sensorId = sensor.sensorId;
+        const sensorIndex = district.sensors.findIndex((s: any) => s.sensorId === sensorId);
 
-    if (sensorIndex !== -1) {
-      district.sensors[sensorIndex] = sensorData;
-    } else {
-      district.sensors.push(sensorData);
+        const sensorData = {
+          sensorId,
+          type: 'camera',
+          edgeId: sensor.edgeId,
+          gatewayId: sensor.gatewayId,
+          value: sensor.vehicleCount || 0,
+          unit: sensor.unit || 'vehicles',
+          status: sensor.status || 'active',
+          lastUpdated: new Date(timestamp),
+          location: { latitude: sensor.latitude, longitude: sensor.longitude },
+          metadata: {
+            roadCondition: sensor.roadCondition,
+            confidence: sensor.confidence,
+            vehicleCount: sensor.vehicleCount,
+            congestionStatus: this.calculateCongestionStatus(sensor.roadCondition || 'clear'),
+          },
+        };
+
+        if (sensorIndex !== -1) {
+          district.sensors[sensorIndex] = sensorData;
+        } else {
+          district.sensors.push(sensorData);
+        }
+      }
     }
   }
 
@@ -568,6 +560,7 @@ export class KafkaConsumerManager {
       sensors: [],
       buildings: [],
       weatherStations: [],
+      gateways: [],
     };
   }
 

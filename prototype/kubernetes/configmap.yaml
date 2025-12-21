@@ -26,9 +26,7 @@ data:
   KAFKA_CLIENT_ID_PRODUCER: "data-producer"
 
   # Kafka Topics
-  KAFKA_TOPIC_SPEED: "city-speed-sensors"
-  KAFKA_TOPIC_WEATHER: "city-weather-sensors"
-  KAFKA_TOPIC_CAMERA: "city-camera-sensors"
+  KAFKA_TOPIC_GATEWAY: "city-gateway-data"
   KAFKA_TOPIC_VEHICLES: "vehicles-telemetry"
   KAFKA_TOPIC_BUILDINGS: "buildings-monitoring"
 

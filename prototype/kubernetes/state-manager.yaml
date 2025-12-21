@@ -61,21 +61,6 @@ spec:
                 configMapKeyRef:
                   name: digital-twin-config
                   key: KAFKA_CLIENT_ID_STATE
-            - name: KAFKA_TOPIC_SPEED
-              valueFrom:
-                configMapKeyRef:
-                  name: digital-twin-config
-                  key: KAFKA_TOPIC_SPEED
-            - name: KAFKA_TOPIC_WEATHER
-              valueFrom:
-                configMapKeyRef:
-                  name: digital-twin-config
-                  key: KAFKA_TOPIC_WEATHER
-            - name: KAFKA_TOPIC_CAMERA
-              valueFrom:
-                configMapKeyRef:
-                  name: digital-twin-config
-                  key: KAFKA_TOPIC_CAMERA
             - name: KAFKA_TOPIC_BUILDINGS
               valueFrom:
                 configMapKeyRef:

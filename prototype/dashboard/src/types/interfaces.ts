@@ -95,7 +95,8 @@ export interface SensorMetadata {
 export interface Sensor {
   sensorId: string;
   type: string;
-  edgeId?: string;
+  edgeId?: string;  // Graph edge ID (E-00000 to E-03458)
+  gatewayId?: string;  // Gateway ID that collected this sensor data
   floor?: number;
   value: number;
   unit: string;
@@ -291,7 +292,8 @@ export interface WeatherStationMetadata {
 export interface WeatherStation {
   stationId: string;
   name: string;
-  edgeId?: string;
+  edgeId?: string;  // Graph edge ID (E-00000 to E-03458)
+  gatewayId?: string;  // Gateway ID that collected this sensor data
   location: WeatherStationLocation;
   readings: WeatherReadings;
   status: SensorStatus;
@@ -365,6 +367,58 @@ export interface District {
   sensors: Sensor[];
   buildings: Building[];
   weatherStations: WeatherStation[];
+  gateways: Gateway[];
+}
+
+// ==================== Gateway Interfaces ====================
+
+export interface GatewayLocation {
+  latitude: number;
+  longitude: number;
+}
+
+export interface GatewaySensorCounts {
+  speed: number;
+  weather: number;
+  camera: number;
+}
+
+export interface GatewayMetadata {
+  name: string;
+  version: string;
+  firmware: string;
+  sensorCounts: GatewaySensorCounts;
+}
+
+// Unified sensor format from gateway
+export interface GatewaySensor {
+  sensorId: string;
+  sensorType: string;  // 'speed' | 'weather' | 'camera'
+  gatewayId: string;
+  edgeId: string;  // Graph edge ID (E-00000 to E-03458)
+  latitude: number;
+  longitude: number;
+  unit: string;
+  status: string;
+  // Speed sensor fields
+  speedKmh?: number;
+  // Weather sensor fields
+  temperatureC?: number;
+  humidity?: number;
+  weatherConditions?: string;
+  // Camera sensor fields
+  roadCondition?: string;
+  confidence?: number;
+  vehicleCount?: number;
+}
+
+export interface Gateway {
+  gatewayId: string;
+  name: string;
+  location: GatewayLocation;
+  lastUpdated: Date | string;
+  metadata: GatewayMetadata;
+  sensors: GatewaySensor[];
 }
 
 // ==================== Public Transport Interfaces ====================

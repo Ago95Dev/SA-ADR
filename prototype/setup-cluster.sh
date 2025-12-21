@@ -25,7 +25,7 @@ docker build -t digital-twin/notification-manager:latest ./notification-manager
 
 # City Simulator
 echo -e "${BLUE}Building City Simulator (digital-twin/city-simulator:latest)...${NC}"
-docker build -t digital-twin/city-simulator:latest -f ./city-simulator/Dockerfile .
+docker build  -t digital-twin/city-simulator:latest -f ./city-simulator/Dockerfile .
 echo -e "${GREEN}Successfully built City Simulator${NC}"
 
 # Vehicles Simulator

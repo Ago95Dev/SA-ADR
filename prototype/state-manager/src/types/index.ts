@@ -75,6 +75,56 @@ export interface District {
   sensors:         Sensor[];
   buildings:       Building[];
   weatherStations: WeatherStation[];
+  gateways:        Gateway[];
+}
+
+// Gateway data from city-simulator
+// Note: Gateways don't have edgeId - edge_id is a property of individual sensors
+export interface Gateway {
+  gatewayId:    string;
+  name:         string;
+  location:     GatewayLocation;
+  lastUpdated:  Date;
+  metadata:     GatewayMetadata;
+  sensors:      GatewaySensor[];
+}
+
+export interface GatewayLocation {
+  latitude:  number;
+  longitude: number;
+}
+
+export interface GatewayMetadata {
+  name:         string;
+  version:      string;
+  firmware:     string;
+  sensorCounts: {
+    speed:   number;
+    weather: number;
+    camera:  number;
+  };
+}
+
+// Unified sensor format from gateway
+export interface GatewaySensor {
+  sensorId:          string;
+  sensorType:        string;  // 'speed' | 'weather' | 'camera'
+  gatewayId:         string;
+  edgeId:            string;
+  latitude:          number;
+  longitude:         number;
+  unit:              string;
+  status:            string;
+  // Speed sensor fields
+  speedKmh?:         number;
+  // Weather sensor fields
+  temperatureC?:     number;
+  humidity?:         number;
+  weatherConditions?: string;
+  // Camera sensor fields
+  roadCondition?:    string;
+  confidence?:       number;
+  vehicleCount?:     number;
 }
 
 export interface Building {
@@ -234,7 +284,8 @@ export interface VehicleRoutePlanning {
 export interface Sensor {
   sensorId:    string;
   type:        string;
-  edgeId?:     string;  // Edge ID from city-simulator
+  edgeId?:     string;  // Graph edge ID (E-00000 to E-03458)
+  gatewayId?:  string;  // Gateway ID that collected this sensor data
   floor?:      number;
   value:       number;
   unit:        string;
@@ -314,7 +365,8 @@ export interface Boundaries {
 export interface WeatherStation {
   stationId:   string;
   name:        string;
-  edgeId?:     string;  // Edge ID from city-simulator
+  edgeId?:     string;  // Graph edge ID (E-00000 to E-03458)
+  gatewayId?:  string;  // Gateway ID that collected this sensor data
   location:    WeatherStationLocation;
   readings:    Readings;
   status:      Status;
