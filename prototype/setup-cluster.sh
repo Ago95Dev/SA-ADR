@@ -18,14 +18,9 @@ docker pull influxdb:2.7-alpine
 # 1. Build Images locally
 echo -e "\n${BLUE}--- Step 1: Building Docker Images Locally ---${NC}"
 
-# State Manager
-docker build -t digital-twin/state-manager:latest ./state-manager
-
-# Notification Manager
-docker build -t digital-twin/notification-manager:latest ./notification-manager
-
-# Data Producer
-docker build -t digital-twin/data-producer:latest ./producer
+docker build --no-cache -t digital-twin/city-simulator:latest -f ./city-simulator/Dockerfile .
+docker build --no-cache -t digital-twin/vehicles-simulator:latest -f ./vehicles-simulator/Dockerfile .
+docker build --no-cache -t digital-twin/buildings-simulator:latest -f ./buildings-simulator/Dockerfile .
 
 # Recommendation Manager 
 # echo -e "${BLUE}Building Recommendation Manager (digital-twin/recommendation-manager:latest)...${NC}"
