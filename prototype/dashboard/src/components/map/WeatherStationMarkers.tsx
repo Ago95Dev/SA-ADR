@@ -1,6 +1,7 @@
 import React from 'react';
 import { Marker, Popup } from 'react-leaflet';
 import type { WeatherSensorReading, WeatherStation } from '../../types';
+import { SensorStatus, WeatherCondition } from '../../types';
 import { createLucideIcon } from '../../utils/leafletIcon';
 
 interface WeatherStationMarkersProps {
@@ -10,29 +11,29 @@ interface WeatherStationMarkersProps {
 // Weather condition icons and colors
 const getWeatherIcon = (conditions: string | undefined): string => {
   const icons: Record<string, string> = {
-    clear: 'sun',
-    cloudy: 'cloud',
-    rainy: 'cloud-rain',
-    foggy: 'cloud-fog',
-    snowy: 'cloud-snow',
+    [WeatherCondition.CLEAR]: 'sun',
+    [WeatherCondition.CLOUDY]: 'cloud',
+    [WeatherCondition.RAINY]: 'cloud-rain',
+    [WeatherCondition.FOGGY]: 'cloud-fog',
+    [WeatherCondition.SNOWY]: 'cloud-snow',
   };
   return icons[conditions || ''] || 'cloud';
 };
 
 const getWeatherColor = (conditions: string | undefined): string => {
   const colors: Record<string, string> = {
-    clear: '#f59e0b',    // amber
-    cloudy: '#6b7280',   // gray
-    rainy: '#3b82f6',    // blue
-    foggy: '#9ca3af',    // light gray
-    snowy: '#60a5fa',    // light blue
+    [WeatherCondition.CLEAR]: '#f59e0b',    // amber
+    [WeatherCondition.CLOUDY]: '#6b7280',   // gray
+    [WeatherCondition.RAINY]: '#3b82f6',    // blue
+    [WeatherCondition.FOGGY]: '#9ca3af',    // light gray
+    [WeatherCondition.SNOWY]: '#60a5fa',    // light blue
   };
   return colors[conditions || ''] || '#8b5cf6';
 };
 
 // Create icons based on weather conditions and status
 const createWeatherIcon = (status: string, weatherConditions?: string) => {
-  if (status !== 'active') {
+  if (status !== SensorStatus.ACTIVE) {
     return createLucideIcon('cloud-off', { backgroundColor: '#6b7280' });
   }
   
@@ -89,7 +90,7 @@ export const WeatherStationMarkers = React.memo(function WeatherStationMarkers({
                   className={`
                     px-2 py-0.5 rounded-full text-xs font-medium
                     ${
-                      station.status === 'active'
+                      station.status === SensorStatus.ACTIVE
                         ? 'bg-green-100 text-green-800'
                         : 'bg-gray-100 text-gray-800'
                     }

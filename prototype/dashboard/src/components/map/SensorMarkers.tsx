@@ -2,6 +2,7 @@ import React from 'react';
 import { Marker, Popup } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import type { CameraSensorReading, Sensor, SpeedSensorReading } from '../../types';
+import { SensorStatus } from '../../types';
 import { createLucideIcon } from '../../utils/leafletIcon';
 
 interface SensorMarkersProps {
@@ -12,10 +13,10 @@ interface SensorMarkersProps {
 const createSensorIcon = (type: string, status: string) => {
   // Color based on status
   const statusColors: Record<string, string> = {
-    active: '#10b981',
-    inactive: '#6b7280',
-    error: '#ef4444',
-    degraded: '#f97316',
+    [SensorStatus.ACTIVE]: '#10b981',
+    [SensorStatus.INACTIVE]: '#6b7280',
+    [SensorStatus.ERROR]: '#ef4444',
+    [SensorStatus.DEGRADED]: '#f97316',
   };
   
   // Icon based on sensor type
@@ -111,7 +112,7 @@ export const SensorMarkers = React.memo(function SensorMarkers({ sensors }: Sens
                   className={`
                     px-2 py-0.5 rounded-full text-xs font-medium
                     ${
-                      sensor.status === 'active'
+                      sensor.status === SensorStatus.ACTIVE
                         ? 'bg-green-100 text-green-800'
                         : 'bg-gray-100 text-gray-800'
                     }

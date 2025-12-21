@@ -1,161 +1,197 @@
-// ==================== Building Enums ====================
+// ==================== Building Constants ====================
 
-export enum BuildingType {
-  HOSPITAL = 'hospital',
-  SCHOOL = 'school',
-  UNIVERSITY = 'university',
-  CHURCH = 'church',
-  RELIGIOUS = 'religious',
-  OFFICE = 'office',
-  RESIDENTIAL = 'residential',
-  COMMERCIAL = 'commercial',
-  INDUSTRIAL = 'industrial',
-  GOVERNMENT = 'government',
-}
+export const BuildingType = {
+  HOSPITAL: 'hospital',
+  SCHOOL: 'school',
+  UNIVERSITY: 'university',
+  CHURCH: 'church',
+  RELIGIOUS: 'religious',
+  OFFICE: 'office',
+  RESIDENTIAL: 'residential',
+  COMMERCIAL: 'commercial',
+  INDUSTRIAL: 'industrial',
+  GOVERNMENT: 'government',
+} as const;
 
-export enum BuildingStatus {
-  OPERATIONAL = 'operational',
-  MAINTENANCE = 'maintenance',
-  CLOSED = 'closed',
-  EMERGENCY = 'emergency',
-}
+export type BuildingType = typeof BuildingType[keyof typeof BuildingType];
 
-export enum ElevatorStatus {
-  OPERATIONAL = 'operational',
-  OUT_OF_SERVICE = 'out_of_service',
-  BLOCKED = 'blocked',
-  MAINTENANCE = 'maintenance',
-}
+export const BuildingStatus = {
+  OPERATIONAL: 'operational',
+  MAINTENANCE: 'maintenance',
+  CLOSED: 'closed',
+  EMERGENCY: 'emergency',
+} as const;
 
-export enum ExitStatus {
-  UNLOCKED = 'unlocked',
-  LOCKED = 'locked',
-  BLOCKED = 'blocked',
-}
+export type BuildingStatus = typeof BuildingStatus[keyof typeof BuildingStatus];
 
-// ==================== Air Quality Enums ====================
+export const ElevatorStatus = {
+  OPERATIONAL: 'operational',
+  OUT_OF_SERVICE: 'out_of_service',
+  BLOCKED: 'blocked',
+  MAINTENANCE: 'maintenance',
+} as const;
 
-export enum AirQualityStatus {
-  EXCELLENT = 'Excellent',
-  GOOD = 'Good',
-  MODERATE = 'Moderate',
-  UNHEALTHY = 'Unhealthy',
-}
+export type ElevatorStatus = typeof ElevatorStatus[keyof typeof ElevatorStatus];
 
-// ==================== Noise Level Enums ====================
+export const ExitStatus = {
+  UNLOCKED: 'unlocked',
+  LOCKED: 'locked',
+  BLOCKED: 'blocked',
+} as const;
 
-export enum NoiseLevelStatus {
-  QUIET = 'Quiet',
-  MODERATE = 'Moderate',
-  LOUD = 'Loud',
-  HAZARDOUS = 'Hazardous',
-}
+export type ExitStatus = typeof ExitStatus[keyof typeof ExitStatus];
 
-// ==================== Sensor Status Enums ====================
+// ==================== Air Quality Constants ====================
 
-export enum SensorStatus {
-  ACTIVE = 'active',
-  INACTIVE = 'inactive',
-  ERROR = 'error',
-  DEGRADED = 'degraded',
-}
+export const AirQualityStatus = {
+  EXCELLENT: 'Excellent',
+  GOOD: 'Good',
+  MODERATE: 'Moderate',
+  UNHEALTHY: 'Unhealthy',
+} as const;
 
-// ==================== Vehicle Enums ====================
+export type AirQualityStatus = typeof AirQualityStatus[keyof typeof AirQualityStatus];
 
-export enum VehicleType {
-  CAR = 'car',
-  BUS = 'bus',
-  TRUCK = 'truck',
-  MOTORCYCLE = 'motorcycle',
-  BICYCLE = 'bicycle',
-  EMERGENCY = 'emergency',
-}
+// ==================== Noise Level Constants ====================
 
-export enum RoutePriority {
-  NORMAL = 'normal',
-  HIGH = 'high',
-  EMERGENCY = 'emergency',
-}
+export const NoiseLevelStatus = {
+  QUIET: 'Quiet',
+  MODERATE: 'Moderate',
+  LOUD: 'Loud',
+  HAZARDOUS: 'Hazardous',
+} as const;
+
+export type NoiseLevelStatus = typeof NoiseLevelStatus[keyof typeof NoiseLevelStatus];
+
+// ==================== Sensor Status Constants ====================
+
+export const SensorStatus = {
+  ACTIVE: 'active',
+  INACTIVE: 'inactive',
+  ERROR: 'error',
+  DEGRADED: 'degraded',
+} as const;
+
+export type SensorStatus = typeof SensorStatus[keyof typeof SensorStatus];
+
+// ==================== Vehicle Constants ====================
+
+export const VehicleType = {
+  CAR: 'car',
+  BUS: 'bus',
+  TRUCK: 'truck',
+  MOTORCYCLE: 'motorcycle',
+  BICYCLE: 'bicycle',
+  EMERGENCY: 'emergency',
+} as const;
+
+export type VehicleType = typeof VehicleType[keyof typeof VehicleType];
+
+export const RoutePriority = {
+  NORMAL: 'normal',
+  HIGH: 'high',
+  EMERGENCY: 'emergency',
+} as const;
+
+export type RoutePriority = typeof RoutePriority[keyof typeof RoutePriority];
 
 // ==================== Icon Names ====================
 
-export enum BuildingIconName {
-  HOSPITAL = 'hospital',
-  GRADUATION_CAP = 'graduation-cap',
-  CHURCH = 'church',
-  BRIEFCASE = 'briefcase',
-  HOME = 'home',
-  BUILDING = 'building',
-}
+export const BuildingIconName = {
+  HOSPITAL: 'hospital',
+  GRADUATION_CAP: 'graduation-cap',
+  CHURCH: 'church',
+  BRIEFCASE: 'briefcase',
+  HOME: 'home',
+  BUILDING: 'building',
+} as const;
+
+export type BuildingIconName = typeof BuildingIconName[keyof typeof BuildingIconName];
 
 // ==================== Status Colors ====================
 
-export enum StatusColor {
-  GREEN = '#4CAF50',
-  LIGHT_GREEN = '#8BC34A',
-  YELLOW = '#FFC107',
-  ORANGE = '#FF9800',
-  DEEP_ORANGE = '#FF5722',
-  RED = '#F44336',
-  GRAY = '#9E9E9E',
-}
+export const StatusColor = {
+  GREEN: '#4CAF50',
+  LIGHT_GREEN: '#8BC34A',
+  YELLOW: '#FFC107',
+  ORANGE: '#FF9800',
+  DEEP_ORANGE: '#FF5722',
+  RED: '#F44336',
+  GRAY: '#9E9E9E',
+} as const;
 
-// ==================== Notification Enums ====================
+export type StatusColor = typeof StatusColor[keyof typeof StatusColor];
 
-export enum NotificationSeverity {
-  INFO = 'info',
-  WARNING = 'warning',
-  ERROR = 'error',
-  CRITICAL = 'critical',
-}
+// ==================== Notification Constants ====================
 
-export enum EntityType {
-  SENSOR = 'sensor',
-  BUILDING = 'building',
-  TRANSPORT = 'transport',
-  DISTRICT = 'district',
-  VEHICLE = 'vehicle',
-}
+export const NotificationSeverity = {
+  INFO: 'info',
+  WARNING: 'warning',
+  ERROR: 'error',
+  CRITICAL: 'critical',
+} as const;
 
-// ==================== WebSocket Enums ====================
+export type NotificationSeverity = typeof NotificationSeverity[keyof typeof NotificationSeverity];
 
-export enum WebSocketMessageType {
-  FULL_STATE = 'full_state',
-  INCREMENTAL_UPDATE = 'incremental_update',
-  ERROR = 'error',
-  CONNECTION = 'connection',
-  PING = 'ping',
-  DISTRICT_UPDATE = 'district_update',
-}
+export const EntityType = {
+  SENSOR: 'sensor',
+  BUILDING: 'building',
+  TRANSPORT: 'transport',
+  DISTRICT: 'district',
+  VEHICLE: 'vehicle',
+} as const;
 
-// ==================== Traffic Enums ====================
+export type EntityType = typeof EntityType[keyof typeof EntityType];
 
-export enum TrafficLightStatus {
-  RED = 'red',
-  YELLOW = 'yellow',
-  GREEN = 'green',
-}
+// ==================== WebSocket Constants ====================
 
-export enum CongestionLevel {
-  LOW = 'low',
-  MODERATE = 'moderate',
-  HIGH = 'high',
-  SEVERE = 'severe',
-}
+export const WebSocketMessageType = {
+  FULL_STATE: 'full_state',
+  INCREMENTAL_UPDATE: 'incremental_update',
+  ERROR: 'error',
+  CONNECTION: 'connection',
+  PING: 'ping',
+  DISTRICT_UPDATE: 'district_update',
+} as const;
 
-export enum IncidentSeverity {
-  LOW = 'low',
-  MEDIUM = 'medium',
-  HIGH = 'high',
-  CRITICAL = 'critical',
-}
+export type WebSocketMessageType = typeof WebSocketMessageType[keyof typeof WebSocketMessageType];
 
-// ==================== Weather Enums ====================
+// ==================== Traffic Constants ====================
 
-export enum WeatherCondition {
-  CLEAR = 'clear',
-  CLOUDY = 'cloudy',
-  RAINY = 'rainy',
-  FOGGY = 'foggy',
-  SNOWY = 'snowy',
-}
+export const TrafficLightStatus = {
+  RED: 'red',
+  YELLOW: 'yellow',
+  GREEN: 'green',
+} as const;
+
+export type TrafficLightStatus = typeof TrafficLightStatus[keyof typeof TrafficLightStatus];
+
+export const CongestionLevel = {
+  LOW: 'low',
+  MODERATE: 'moderate',
+  HIGH: 'high',
+  SEVERE: 'severe',
+} as const;
+
+export type CongestionLevel = typeof CongestionLevel[keyof typeof CongestionLevel];
+
+export const IncidentSeverity = {
+  LOW: 'low',
+  MEDIUM: 'medium',
+  HIGH: 'high',
+  CRITICAL: 'critical',
+} as const;
+
+export type IncidentSeverity = typeof IncidentSeverity[keyof typeof IncidentSeverity];
+
+// ==================== Weather Constants ====================
+
+export const WeatherCondition = {
+  CLEAR: 'clear',
+  CLOUDY: 'cloudy',
+  RAINY: 'rainy',
+  FOGGY: 'foggy',
+  SNOWY: 'snowy',
+} as const;
+
+export type WeatherCondition = typeof WeatherCondition[keyof typeof WeatherCondition];

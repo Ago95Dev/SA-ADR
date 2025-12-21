@@ -73,7 +73,7 @@ interface CameraSensorMessage {
   sensor_readings: CameraSensorReading[];
 }
 
-type CitySensorMessage = SpeedSensorMessage | WeatherSensorMessage | CameraSensorMessage;
+// type CitySensorMessage = SpeedSensorMessage | WeatherSensorMessage | CameraSensorMessage;
 
 /**
  * Buildings-Simulator Message Types

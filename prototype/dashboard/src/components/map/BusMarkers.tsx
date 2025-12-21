@@ -2,6 +2,7 @@ import React from 'react';
 import { Marker, Popup } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import type { Bus } from '../../types';
+import { BuildingStatus, SensorStatus } from '../../types';
 import { createLucideIcon } from '../../utils/leafletIcon';
 
 interface BusMarkersProps {
@@ -11,10 +12,10 @@ interface BusMarkersProps {
 // Create icons based on bus status
 const createBusIcon = (status: string) => {
   const colors: Record<string, string> = {
-    operational: '#10b981',
-    active: '#10b981',
-    inactive: '#6b7280',
-    maintenance: '#f97316',
+    [BuildingStatus.OPERATIONAL]: '#10b981',
+    [SensorStatus.ACTIVE]: '#10b981',
+    [SensorStatus.INACTIVE]: '#6b7280',
+    [BuildingStatus.MAINTENANCE]: '#f97316',
   };
   
   const backgroundColor = colors[status.toLowerCase()] || '#3b82f6';
@@ -45,9 +46,9 @@ export const BusMarkers = React.memo(function BusMarkers({ buses }: BusMarkersPr
                   className={`
                     px-2 py-0.5 rounded-full text-xs font-medium
                     ${
-                      bus.status === 'operational' || bus.status === 'active'
+                      bus.status === BuildingStatus.OPERATIONAL || bus.status === SensorStatus.ACTIVE
                         ? 'bg-green-100 text-green-800'
-                        : bus.status === 'maintenance'
+                        : bus.status === BuildingStatus.MAINTENANCE
                         ? 'bg-orange-100 text-orange-800'
                         : 'bg-gray-100 text-gray-800'
                     }
