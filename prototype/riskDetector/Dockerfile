@@ -1,9 +1,9 @@
 ###########################################################
-# Stage 1: Build the native executable using Maven
+# Stage 1: Build JVM application using Maven
 ###########################################################
 FROM quay.io/quarkus/ubi9-quarkus-mandrel-builder-image:jdk-21 AS build
+# (va bene anche come builder JVM, contiene Maven + JDK)
 
-# Set working directory
 WORKDIR /code
 
 # Copy Maven wrapper, .mvn folder, and pom.xml
@@ -11,40 +11,35 @@ COPY risk_detector/mvnw /code/mvnw
 COPY risk_detector/.mvn /code/.mvn
 COPY risk_detector/pom.xml /code/
 
-# Switch to non-root user for security
+# Switch to non-root user
 USER quarkus
 
-# Pre-download dependencies for faster build
+# Pre-download dependencies
 RUN ./mvnw -B org.apache.maven.plugins:maven-dependency-plugin:3.8.1:go-offline
 
 # Copy source code
 COPY risk_detector/src /code/src
 
-# Build native executable
-RUN ./mvnw package -Dnative
+# Build JVM artifact (FAST-JAR by default)
+RUN ./mvnw package -DskipTests
 
 ###########################################################
-# Stage 2: Create minimal runtime image
+# Stage 2: Runtime image (JVM)
 ###########################################################
-FROM quay.io/quarkus/ubi9-quarkus-micro-image:2.0
+FROM registry.access.redhat.com/ubi9/openjdk-21-runtime
 
-# Set working directory
 WORKDIR /work/
 
-# Copy native executable from build stage
-COPY --from=build /code/target/*-runner /work/application
+# Copy Quarkus fast-jar
+COPY --from=build /code/target/quarkus-app /work/quarkus-app
 
-# Set permissions and ownership for security
-RUN chmod 775 /work /work/application \
-    && chown -R 1001 /work \
-    && chmod -R "g+rwX" /work \
-    && chown -R 1001:root /work
+# Fix permissions
+RUN chown -R 1001:root /work \
+    && chmod -R g+rwX /work
 
-# Expose application port
 EXPOSE 8080
 
-# Run as non-root user
 USER 1001
 
-# Start the application, listening on all network interfaces
-CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]
+# Run Quarkus JVM app
+CMD ["java", "-jar", "/work/quarkus-app/quarkus-run.jar", "-Dquarkus.http.host=0.0.0.0"]
