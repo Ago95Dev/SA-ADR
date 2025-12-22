@@ -1,4 +1,4 @@
-import { Activity, AlertTriangle, Ambulance, BarChart2, Building2, CheckCircle, Info, Lock, Map, MapPin, Play, Power, Shield, Siren, TrendingUp, User, Users, X } from 'lucide-react';
+import { Activity, AlertTriangle, Ambulance, BarChart2, Building2, CheckCircle, Info, Lock, Map, MapPin, Play, Power, Shield, TrendingUp, User, Users, X, Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 interface SimulationDashboardProps {
@@ -90,6 +90,237 @@ const ConfirmationModal = ({ action, details, onConfirm, onCancel }: { action: s
     </div>
 );
 
+// Floor Layout Types
+type RoomType = 'ward' | 'office' | 'corridor' | 'utility' | 'reception' | 'icu';
+
+interface Sensor {
+    id: string;
+    type: 'occupancy' | 'power' | 'smoke' | 'temp';
+    status: 'normal' | 'warning' | 'alert';
+    value?: string;
+}
+
+interface Zone {
+    id: string;
+    name: string;
+    type: RoomType;
+    colSpan: number;
+    rowSpan: number;
+    sensors: Sensor[];
+}
+
+interface FloorLayout {
+    name: string;
+    gridCols: number;
+    gridRows: number;
+    zones: Zone[];
+}
+
+// Layout Generators
+const generateSensors = (type: RoomType): Sensor[] => {
+    const sensors: Sensor[] = [];
+    if (type === 'corridor') {
+        sensors.push({ id: 's-exit', type: 'occupancy', status: 'normal', value: 'Clear' });
+        sensors.push({ id: 's-smoke', type: 'smoke', status: 'normal' });
+    } else {
+        sensors.push({ id: 's-occ', type: 'occupancy', status: 'normal', value: Math.floor(Math.random() * 5).toString() });
+        sensors.push({ id: 's-pwr', type: 'power', status: 'normal', value: '220V' });
+        sensors.push({ id: 's-tmp', type: 'temp', status: 'normal', value: '21°C' });
+        if (type === 'icu' || type === 'utility') {
+            sensors.push({ id: 's-crit', type: 'power', status: 'normal', value: 'UPS' });
+        }
+    }
+    return sensors;
+};
+
+const getFloorLayout = (floorIndex: number, totalFloors: number): FloorLayout => {
+    // Ground Floor: Reception & Admin
+    if (floorIndex === 0) {
+        return {
+            name: "Reception & Triage",
+            gridCols: 6,
+            gridRows: 4,
+            zones: [
+                { id: 'z1', name: 'MAIN ENTRANCE', type: 'corridor', colSpan: 6, rowSpan: 1, sensors: generateSensors('corridor') },
+                { id: 'z2', name: 'RECEPTION', type: 'reception', colSpan: 2, rowSpan: 2, sensors: generateSensors('reception') },
+                { id: 'z3', name: 'WAITING AREA', type: 'ward', colSpan: 2, rowSpan: 2, sensors: generateSensors('ward') },
+                { id: 'z4', name: 'TRIAGE 1', type: 'icu', colSpan: 1, rowSpan: 2, sensors: generateSensors('icu') },
+                { id: 'z5', name: 'TRIAGE 2', type: 'icu', colSpan: 1, rowSpan: 2, sensors: generateSensors('icu') },
+                { id: 'z6', name: 'ADMIN OFFICE', type: 'office', colSpan: 3, rowSpan: 1, sensors: generateSensors('office') },
+                { id: 'z7', name: 'SECURITY', type: 'utility', colSpan: 3, rowSpan: 1, sensors: generateSensors('utility') }
+            ]
+        };
+    }
+    // Top Floor: Technical / Utility
+    else if (floorIndex === totalFloors - 1) {
+        return {
+            name: "Technical & HVAC",
+            gridCols: 4,
+            gridRows: 3,
+            zones: [
+                { id: 't1', name: 'SERVER ROOM', type: 'utility', colSpan: 2, rowSpan: 2, sensors: generateSensors('utility') },
+                { id: 't2', name: 'HVAC MAIN', type: 'utility', colSpan: 2, rowSpan: 2, sensors: generateSensors('utility') },
+                { id: 't3', name: 'MAINTENANCE CORRIDOR', type: 'corridor', colSpan: 4, rowSpan: 1, sensors: generateSensors('corridor') }
+            ]
+        };
+    }
+    // Middle Floors: Wards / Clinical
+    else {
+        return {
+            name: `Clinical Ward ${String.fromCharCode(64 + floorIndex)}`,
+            gridCols: 8,
+            gridRows: 4,
+            zones: [
+                { id: 'w1', name: 'NURSE STATION', type: 'reception', colSpan: 2, rowSpan: 2, sensors: generateSensors('reception') },
+                { id: 'w2', name: 'ROOM 101', type: 'ward', colSpan: 2, rowSpan: 1, sensors: generateSensors('ward') },
+                { id: 'w3', name: 'ROOM 102', type: 'ward', colSpan: 2, rowSpan: 1, sensors: generateSensors('ward') },
+                { id: 'w4', name: 'ICU UNIT A', type: 'icu', colSpan: 2, rowSpan: 2, sensors: generateSensors('icu') },
+
+                { id: 'w5', name: 'ROOM 103', type: 'ward', colSpan: 2, rowSpan: 1, sensors: generateSensors('ward') },
+                { id: 'w6', name: 'ROOM 104', type: 'ward', colSpan: 2, rowSpan: 1, sensors: generateSensors('ward') },
+
+                { id: 'w7', name: 'MAIN CORRIDOR', type: 'corridor', colSpan: 8, rowSpan: 1, sensors: generateSensors('corridor') },
+
+                { id: 'w8', name: 'STORAGE', type: 'utility', colSpan: 2, rowSpan: 1, sensors: generateSensors('utility') },
+                { id: 'w9', name: 'ROOM 105', type: 'ward', colSpan: 2, rowSpan: 1, sensors: generateSensors('ward') },
+                { id: 'w10', name: 'ROOM 106', type: 'ward', colSpan: 2, rowSpan: 1, sensors: generateSensors('ward') },
+                { id: 'w11', name: 'STAFF ROOM', type: 'office', colSpan: 2, rowSpan: 1, sensors: generateSensors('office') }
+            ]
+        };
+    }
+};
+
+// Floor Schematic Modal
+const FloorSchematicModal = ({ floorIndex, buildingName, status, onClose }: { floorIndex: number, buildingName: string, status: FloorStatus, onClose: () => void }) => {
+    // Mock total floors based on typical building size or pass it as prop if available. 
+    // For now assuming 6 for hospital, 3-4 for others.
+    const layout = getFloorLayout(floorIndex, 6);
+
+    const getZoneColor = (type: RoomType, status: FloorStatus) => {
+        if (status === 'evacuating') return 'bg-red-900/20 border-red-500/50';
+        if (status === 'lockdown') return 'bg-purple-900/20 border-purple-500/50';
+        if (status === 'power-save' && type !== 'icu') return 'bg-yellow-900/10 border-yellow-500/30';
+
+        switch (type) {
+            case 'corridor': return 'bg-slate-800/30 border-slate-700';
+            case 'icu': return 'bg-blue-900/20 border-blue-500/30';
+            case 'utility': return 'bg-slate-800/80 border-slate-600';
+            default: return 'bg-slate-800/50 border-slate-700';
+        }
+    };
+
+    return (
+        <div className="fixed inset-0 bg-black/80 z-[90] flex items-center justify-center p-4 backdrop-blur-sm animate-in zoom-in-95 duration-200">
+            <div className="bg-slate-900 rounded-xl shadow-2xl w-full max-w-6xl h-[90vh] flex flex-col border border-slate-700">
+                {/* Header */}
+                <div className="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900 rounded-t-xl">
+                    <div>
+                        <h3 className="text-2xl font-bold text-white flex items-center gap-3">
+                            <Building2 className="w-6 h-6 text-blue-400" />
+                            {buildingName} - Floor {floorIndex + 1}
+                        </h3>
+                        <p className="text-slate-400 text-sm mt-1 flex items-center gap-4">
+                            <span className="flex items-center gap-1"><MapPin className="w-4 h-4" /> {layout.name}</span>
+                            <span className="w-px h-4 bg-slate-700"></span>
+                            <span>Status:
+                                <span className={`ml-2 uppercase font-bold ${status === 'evacuating' ? 'text-red-500 animate-pulse' :
+                                    status === 'power-save' ? 'text-yellow-500' :
+                                        status === 'lockdown' ? 'text-purple-500' : 'text-green-500'
+                                    }`}>{status}</span>
+                            </span>
+                        </p>
+                    </div>
+                    <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors p-2 hover:bg-slate-800 rounded-lg">
+                        <X className="w-6 h-6" />
+                    </button>
+                </div>
+
+                {/* Schematic View */}
+                <div className="flex-1 p-8 bg-slate-950 relative overflow-hidden flex items-center justify-center">
+                    {/* Grid Background */}
+                    <div className="absolute inset-0 opacity-10"
+                        style={{ backgroundImage: 'linear-gradient(#334155 1px, transparent 1px), linear-gradient(90deg, #334155 1px, transparent 1px)', backgroundSize: '40px 40px' }}>
+                    </div>
+
+                    {/* Floor Plan Container */}
+                    <div className="relative w-full h-full max-h-[800px] border-4 border-slate-800 bg-slate-900 rounded-lg shadow-2xl p-6 overflow-auto">
+                        <div className="grid gap-4 h-full" style={{
+                            gridTemplateColumns: `repeat(${layout.gridCols}, minmax(0, 1fr))`,
+                            gridTemplateRows: `repeat(${layout.gridRows}, minmax(0, 1fr))`
+                        }}>
+                            {layout.zones.map((zone) => (
+                                <div key={zone.id}
+                                    className={`rounded border-2 relative group transition-all duration-300 hover:border-blue-400/50 ${getZoneColor(zone.type, status)}`}
+                                    style={{ gridColumn: `span ${zone.colSpan}`, gridRow: `span ${zone.rowSpan}` }}
+                                >
+                                    {/* Zone Label */}
+                                    <div className="absolute top-2 left-2 right-2 flex justify-between items-start">
+                                        <span className="text-slate-500 font-mono text-[10px] uppercase tracking-wider bg-slate-900/50 px-1 rounded">{zone.name}</span>
+                                        {zone.type === 'icu' && <Shield className="w-3 h-3 text-blue-500" />}
+                                    </div>
+
+                                    {/* Sensors Grid */}
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <div className="grid grid-cols-2 gap-2 p-4">
+                                            {zone.sensors.map((sensor) => (
+                                                <div key={sensor.id} className="flex items-center gap-1.5 bg-slate-900/40 px-2 py-1 rounded border border-slate-700/50" title={`${sensor.type}: ${sensor.value}`}>
+                                                    {sensor.type === 'occupancy' && <Users className="w-3 h-3 text-slate-400" />}
+                                                    {sensor.type === 'power' && <Zap className={`w-3 h-3 ${status === 'power-save' ? 'text-yellow-600' : 'text-yellow-400'}`} />}
+                                                    {sensor.type === 'temp' && <Activity className="w-3 h-3 text-red-400" />}
+                                                    {sensor.type === 'smoke' && <AlertTriangle className="w-3 h-3 text-orange-400" />}
+
+                                                    {sensor.value && <span className="text-[10px] text-slate-300 font-mono">{sensor.value}</span>}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Status Overlay for Evacuation */}
+                                    {status === 'evacuating' && (
+                                        <div className="absolute inset-0 bg-red-500/5 animate-pulse flex items-center justify-center pointer-events-none">
+                                            {zone.type === 'corridor' && (
+                                                <div className="flex gap-8 opacity-50">
+                                                    <div className="w-2 h-2 bg-red-500 rounded-full animate-ping delay-75"></div>
+                                                    <div className="w-2 h-2 bg-red-500 rounded-full animate-ping delay-150"></div>
+                                                    <div className="w-2 h-2 bg-red-500 rounded-full animate-ping delay-300"></div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Footer Legend */}
+                <div className="p-4 bg-slate-900 border-t border-slate-800 flex justify-center gap-8 text-sm text-slate-400">
+                    <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                        <span>Safe</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                        <span>Evacuation</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                        <span>ICU / Critical</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Users className="w-4 h-4" />
+                        <span>Occupancy</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Zap className="w-4 h-4 text-yellow-500" />
+                        <span>Power</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 export function SimulationDashboard({ isOpen, onClose }: SimulationDashboardProps) {
     const [activeTab, setActiveTab] = useState<Tab>('simulation');
     const [userRole, setUserRole] = useState<UserRole>('operator');
@@ -109,6 +340,7 @@ export function SimulationDashboard({ isOpen, onClose }: SimulationDashboardProp
     // Building State
     const [selectedBuilding, setSelectedBuilding] = useState(AQUILA_BUILDINGS[0]);
     const [floors, setFloors] = useState<FloorStatus[]>(Array(AQUILA_BUILDINGS[0].floors).fill('normal'));
+    const [selectedFloor, setSelectedFloor] = useState<number | null>(null);
 
     // Notification & Modal State
     const [toast, setToast] = useState<{ message: string, type: 'success' | 'info' } | null>(null);
@@ -238,7 +470,7 @@ export function SimulationDashboard({ isOpen, onClose }: SimulationDashboardProp
                                 <div>
                                     <p className="font-bold text-slate-800">{d.name}</p>
                                     <p className={`text-xs font-medium ${d.status === 'Good' ? 'text-green-600' :
-                                            d.status === 'Warning' ? 'text-orange-600' : 'text-yellow-600'
+                                        d.status === 'Warning' ? 'text-orange-600' : 'text-yellow-600'
                                         }`}>{d.status} Condition</p>
                                 </div>
                                 <div className="text-right">
@@ -411,8 +643,8 @@ export function SimulationDashboard({ isOpen, onClose }: SimulationDashboardProp
                                                         <div className="flex gap-1 h-4 mb-2">
                                                             {[...Array(10)].map((_, i) => (
                                                                 <div key={i} className={`flex-1 rounded-sm transition-colors duration-500 ${roadStatus === 'critical' ? (i < 8 ? 'bg-red-500' : 'bg-red-300') :
-                                                                        roadStatus === 'improving' ? (i < 5 ? 'bg-yellow-500' : 'bg-green-500') :
-                                                                            'bg-green-500'
+                                                                    roadStatus === 'improving' ? (i < 5 ? 'bg-yellow-500' : 'bg-green-500') :
+                                                                        'bg-green-500'
                                                                     }`}></div>
                                                             ))}
                                                         </div>
@@ -549,15 +781,21 @@ export function SimulationDashboard({ isOpen, onClose }: SimulationDashboardProp
                                                 <Users className="w-5 h-5 text-slate-600" />
                                                 Live Status: {selectedBuilding.name}
                                             </h3>
+                                            <p className="text-xs text-slate-400 mb-2">Click on a floor to view details</p>
                                             <div className="flex flex-col-reverse gap-2 p-4 bg-slate-50 rounded-lg border border-slate-200 h-[300px] justify-end overflow-y-auto">
                                                 {floors.map((status, i) => (
-                                                    <div key={i} className={`w-full p-3 rounded border flex items-center justify-between transition-all duration-500 ${status === 'evacuating' ? 'bg-red-100 border-red-300 animate-pulse' :
+                                                    <div
+                                                        key={i}
+                                                        onClick={() => setSelectedFloor(i)}
+                                                        className={`w-full p-3 rounded border flex items-center justify-between transition-all duration-500 cursor-pointer hover:scale-[1.02] hover:shadow-md ${status === 'evacuating' ? 'bg-red-100 border-red-300 animate-pulse' :
                                                             status === 'power-save' ? 'bg-yellow-100 border-yellow-300' :
                                                                 status === 'lockdown' ? 'bg-slate-800 border-slate-900 text-white' :
-                                                                    'bg-white border-slate-300'
-                                                        }`}>
+                                                                    'bg-white border-slate-300 hover:border-blue-400'
+                                                            }`}>
                                                         <span className={`text-sm font-bold ${status === 'lockdown' ? 'text-slate-200' : 'text-slate-600'}`}>Floor {i + 1}</span>
-                                                        <span className="text-xs font-medium uppercase">{status}</span>
+                                                        <span className="text-xs font-medium uppercase flex items-center gap-1">
+                                                            {status} <Info className="w-3 h-3" />
+                                                        </span>
                                                     </div>
                                                 ))}
                                                 <div className="text-center text-xs text-slate-400 mt-2">Ground Floor</div>
@@ -580,7 +818,7 @@ export function SimulationDashboard({ isOpen, onClose }: SimulationDashboardProp
 
                 {/* Footer */}
                 <div className="bg-slate-50 p-4 border-t border-slate-200 text-center text-xs text-slate-400">
-                    SA-ADR Prototype • Emergency Decision Support Module • v0.6.0-mockup
+                    SA-ADR Prototype • Emergency Decision Support Module • v0.7.0-mockup
                 </div>
 
                 {/* Toast Notification */}
@@ -593,6 +831,16 @@ export function SimulationDashboard({ isOpen, onClose }: SimulationDashboardProp
                         details={pendingAction.details}
                         onConfirm={confirmAction}
                         onCancel={() => setPendingAction(null)}
+                    />
+                )}
+
+                {/* Floor Schematic Modal */}
+                {selectedFloor !== null && (
+                    <FloorSchematicModal
+                        floorIndex={selectedFloor}
+                        buildingName={selectedBuilding.name}
+                        status={floors[selectedFloor]}
+                        onClose={() => setSelectedFloor(null)}
                     />
                 )}
             </div>
