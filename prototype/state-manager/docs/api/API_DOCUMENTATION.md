@@ -18,9 +18,12 @@ The State Manager API provides RESTful endpoints to query the digital twin state
   - [Get Complete State](#get-complete-state)
   - [Get Districts](#get-districts)
   - [Get District by ID](#get-district-by-id)
+  - [Get District Sensors](#get-district-sensors)
+  - [Get District Buildings](#get-district-buildings)
+  - [Get District Weather](#get-district-weather)
   - [Get City Graph](#get-city-graph)
-  - [Get Buildings](#get-buildings)
-  - [Get Sensors](#get-sensors)
+  - [Get Buildings](#get-buildings) (Not Implemented)
+  - [Get Sensors](#get-sensors) (Not Implemented)
   - [Get Vehicles](#get-vehicles)
   - [Get State Snapshot](#get-state-snapshot)
   - [Get Latest Snapshot](#get-latest-snapshot)
@@ -47,13 +50,18 @@ Check if the API server is running and responsive.
 **Response:**
 ```json
 {
-  "status": "ok",
-  "timestamp": "2024-12-08T10:30:00.000Z"
+  "status": "healthy",
+  "timestamp": "2024-12-08T10:30:00.000Z",
+  "services": {
+    "redis": "connected",
+    "mongodb": "connected"
+  }
 }
 ```
 
 **Status Codes:**
-- `200 OK`: Server is healthy
+- `200 OK`: All services are healthy
+- `503 Service Unavailable`: One or more services are unhealthy
 
 **Example:**
 ```bash
@@ -86,7 +94,6 @@ Retrieve the complete current state of the city digital twin.
 
 **Status Codes:**
 - `200 OK`: State retrieved successfully
-- `404 Not Found`: No state available
 - `500 Internal Server Error`: Server error
 
 **Example:**
@@ -161,7 +168,7 @@ Retrieve all districts in the city.
 
 **Status Codes:**
 - `200 OK`: Districts retrieved successfully
-- `404 Not Found`: No state available
+- `500 Internal Server Error`: Server error
 
 **Example:**
 ```bash
@@ -221,10 +228,152 @@ Retrieve a specific district by its ID.
 **Status Codes:**
 - `200 OK`: District retrieved successfully
 - `404 Not Found`: District not found
+- `500 Internal Server Error`: Server error
 
 **Example:**
 ```bash
 curl http://localhost:3000/api/state/districts/district-roio
+```
+
+---
+
+### Get District Sensors
+
+Retrieve all sensors for a specific district.
+
+**Endpoint:** `GET /state/districts/:districtId/sensors`
+
+**Parameters:**
+- `districtId` (path parameter): District identifier
+
+**Response:**
+```json
+[
+  {
+    "sensorId": "speed-E-00100",
+    "type": "speed",
+    "edgeId": "E-00100",
+    "gatewayId": "GW-00012",
+    "value": 45.67,
+    "unit": "km/h",
+    "status": "active",
+    "location": {
+      "latitude": 42.3506,
+      "longitude": 13.3992
+    },
+    "lastUpdated": "2024-12-08T10:30:00.000Z",
+    "metadata": {
+      "avgSpeed": 45.67,
+      "sensorCount": 2
+    }
+  }
+]
+```
+
+**Status Codes:**
+- `200 OK`: Sensors retrieved successfully
+- `404 Not Found`: District not found
+- `500 Internal Server Error`: Server error
+
+**Example:**
+```bash
+curl http://localhost:3000/api/state/districts/district-roio/sensors
+```
+
+---
+
+### Get District Buildings
+
+Retrieve all buildings for a specific district.
+
+**Endpoint:** `GET /state/districts/:districtId/buildings`
+
+**Parameters:**
+- `districtId` (path parameter): District identifier
+
+**Response:**
+```json
+[
+  {
+    "buildingId": "B-001",
+    "name": "Municipal Building",
+    "type": "government",
+    "location": {
+      "latitude": 42.3498,
+      "longitude": 13.3995,
+      "address": "Via XX Settembre, L'Aquila",
+      "altitudeM": 721
+    },
+    "status": "operational",
+    "lastUpdated": "2024-12-08T10:30:00.000Z",
+    "airQuality": [...],
+    "acoustic": [...],
+    "displays": [...],
+    "managedResources": {
+      "emergencyExits": [...],
+      "elevators": [...]
+    }
+  }
+]
+```
+
+**Status Codes:**
+- `200 OK`: Buildings retrieved successfully
+- `404 Not Found`: District not found
+- `500 Internal Server Error`: Server error
+
+**Example:**
+```bash
+curl http://localhost:3000/api/state/districts/district-roio/buildings
+```
+
+---
+
+### Get District Weather
+
+Retrieve all weather stations for a specific district.
+
+**Endpoint:** `GET /state/districts/:districtId/weather`
+
+**Parameters:**
+- `districtId` (path parameter): District identifier
+
+**Response:**
+```json
+[
+  {
+    "stationId": "WS-001",
+    "name": "Weather Station WS-001",
+    "edgeId": "E-00100",
+    "gatewayId": "GW-00012",
+    "location": {
+      "latitude": 42.3498,
+      "longitude": 13.3995,
+      "elevation": 721
+    },
+    "readings": {
+      "temperature": 15.5,
+      "humidity": 65,
+      "weatherConditions": "clear",
+      "units": {
+        "temperature": "C",
+        "humidity": "%"
+      }
+    },
+    "status": "active",
+    "lastUpdated": "2024-12-08T10:30:00.000Z"
+  }
+]
+```
+
+**Status Codes:**
+- `200 OK`: Weather stations retrieved successfully
+- `404 Not Found`: District not found
+- `500 Internal Server Error`: Server error
+
+**Example:**
+```bash
+curl http://localhost:3000/api/state/districts/district-roio/weather
 ```
 
 ---
@@ -238,37 +387,53 @@ Retrieve the road network graph for the entire city.
 **Response:**
 ```json
 {
-  "graph": {
-    "nodes": [
-      {
-        "id": "node-1",
-        "location": {
-          "lat": 42.3498,
-          "lon": 13.3995
-        }
+  "nodes": [
+    {
+      "nodeId": "N-00001",
+      "type": "intersection",
+      "name": "Intersection N-00001",
+      "location": {
+        "latitude": 42.3498,
+        "longitude": 13.3995
+      },
+      "trafficLight": {
+        "status": "green",
+        "timeRemaining": 30,
+        "cycleTime": 90
       }
-    ],
-    "edges": [
-      {
-        "id": "edge-1",
-        "source": "node-1",
-        "target": "node-2",
-        "length": 150.5,
-        "trafficData": {
-          "averageSpeed": 45.5,
-          "congestionLevel": "medium",
-          "vehicleCount": 25,
-          "travelTime": 3.5
-        }
-      }
-    ]
-  }
+    }
+  ],
+  "edges": [
+    {
+      "edgeId": "E-00001",
+      "roadSegmentId": "RS-001",
+      "name": "Road E-00001",
+      "fromNode": "N-00001",
+      "toNode": "N-00002",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [[13.3995, 42.3498], [13.4010, 42.3505]]
+      },
+      "distance": 150.5,
+      "speedLimit": 50,
+      "lanes": 2,
+      "direction": "bidirectional",
+      "trafficConditions": {
+        "averageSpeed": 35,
+        "congestionLevel": "moderate",
+        "vehicleCount": 15,
+        "travelTime": 15.5,
+        "incidents": []
+      },
+      "lastUpdated": "2024-12-08T10:30:00.000Z"
+    }
+  ]
 }
 ```
 
 **Status Codes:**
 - `200 OK`: Graph retrieved successfully
-- `404 Not Found`: No state available
+- `500 Internal Server Error`: Server error
 
 **Example:**
 ```bash
@@ -279,97 +444,27 @@ curl http://localhost:3000/api/state/graph
 
 ### Get Buildings
 
-Retrieve all buildings in the city.
+**Note:** This endpoint is not implemented. Buildings are accessed through district-specific endpoints.
 
-**Endpoint:** `GET /state/buildings`
-
-**Response:**
-```json
-{
-  "buildings": [
-    {
-      "id": "building-1",
-      "type": "residential",
-      "occupancy": 150,
-      "energyConsumption": 250.5,
-      "location": {
-        "lat": 42.3498,
-        "lon": 13.3995
-      }
-    }
-  ]
-}
-```
+Use instead:
+- `GET /state/districts/:districtId/buildings` - Get buildings for a specific district
+- `GET /state/districts` - Get all districts with their buildings
 
 **Status Codes:**
-- `200 OK`: Buildings retrieved successfully
-- `404 Not Found`: No state available
-
-**Example:**
-```bash
-curl http://localhost:3000/api/state/buildings
-```
+- `404 Not Found`: Endpoint not available
 
 ---
 
 ### Get Sensors
 
-Retrieve all sensors in the city (from city-simulator edge managers).
+**Note:** This endpoint is not implemented. Sensors are accessed through district-specific endpoints.
 
-**Endpoint:** `GET /state/sensors`
-
-**Response:**
-```json
-{
-  "sensors": [
-    {
-      "sensorId": "speed-edge-centro-1",
-      "type": "speed",
-      "edgeId": "edge-centro-1",
-      "value": 45.67,
-      "unit": "km/h",
-      "status": "active",
-      "location": {
-        "latitude": 42.3506,
-        "longitude": 13.3992
-      },
-      "lastUpdated": "2025-12-21T10:30:00.000Z",
-      "metadata": {
-        "avgSpeed": 45.67,
-        "sensorCount": 2
-      }
-    },
-    {
-      "sensorId": "camera-edge-centro-1",
-      "type": "camera",
-      "edgeId": "edge-centro-1",
-      "value": 15,
-      "unit": "vehicles",
-      "status": "active",
-      "location": {
-        "latitude": 42.3506,
-        "longitude": 13.3992
-      },
-      "lastUpdated": "2025-12-21T10:30:00.000Z",
-      "metadata": {
-        "roadCondition": "clear",
-        "confidence": 0.92,
-        "vehicleCount": 15,
-        "congestionStatus": "free_flow"
-      }
-    }
-  ]
-}
-```
+Use instead:
+- `GET /state/districts/:districtId/sensors` - Get sensors for a specific district
+- `GET /state/districts` - Get all districts with their sensors
 
 **Status Codes:**
-- `200 OK`: Sensors retrieved successfully
-- `404 Not Found`: No state available
-
-**Example:**
-```bash
-curl http://localhost:3000/api/state/sensors
-```
+- `404 Not Found`: Endpoint not available
 
 ---
 

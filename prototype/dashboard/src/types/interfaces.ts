@@ -1,11 +1,10 @@
 import {
   ElevatorStatus,
-  EntityType,
   ExitStatus,
   NotificationSeverity,
   RoutePriority,
   SensorStatus,
-  WebSocketMessageType,
+  WebSocketMessageType
 } from './enums';
 
 // ==================== Location Interfaces ====================
@@ -444,16 +443,11 @@ export type CityState = City;
 
 export interface Notification {
   _id: string;
-  type: string;
   severity: NotificationSeverity;
   title: string;
   message: string;
   timestamp: string;
   source: string;
-  districtId?: string;
-  entityId?: string;
-  entityType?: EntityType;
-  data?: Record<string, unknown>;
   read?: boolean;
   acknowledged?: boolean;
 }

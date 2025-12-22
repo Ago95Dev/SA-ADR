@@ -94,9 +94,9 @@ export function NotificationItem({ notification, onMarkAsRead }: NotificationIte
           </p>
           
           <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
-            <span className="px-2 py-0.5 bg-white rounded-full border border-gray-200">
+            {/* <span className="px-2 py-0.5 bg-white rounded-full border border-gray-200">
               {notification.type}
-            </span>
+            </span> */}
             {notification.source && (
               <span className="px-2 py-0.5 bg-white rounded-full border border-gray-200">
                 {notification.source}
@@ -110,7 +110,7 @@ export function NotificationItem({ notification, onMarkAsRead }: NotificationIte
                 {notification.message}
               </p>
               
-              {notification.districtId && (
+              {/* {notification.districtId && (
                 <p className="text-xs text-gray-500 mt-2">
                   <strong>District:</strong> {notification.districtId}
                 </p>
@@ -131,7 +131,7 @@ export function NotificationItem({ notification, onMarkAsRead }: NotificationIte
                     {JSON.stringify(notification.data, null, 2)}
                   </pre>
                 </details>
-              )}
+              )} */}
             </div>
           )}
         </div>
