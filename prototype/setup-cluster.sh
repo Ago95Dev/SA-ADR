@@ -8,6 +8,13 @@ NC='\033[0m' # No Color
 
 echo -e "${BLUE}Starting Digital Twin Kubernetes Setup...${NC}"
 
+# NOTE: only for alessandro's PC 
+# 0 pull images
+docker pull apache/kafka:latest
+docker pull redis:7-alpine
+docker pull mongo:6
+docker pull influxdb:2.7-alpine
+
 # 1. Build Images locally
 echo -e "\n${BLUE}--- Step 1: Building Docker Images Locally ---${NC}"
 
@@ -19,9 +26,14 @@ docker build -t digital-twin/notification-manager:latest ./notification-manager
 
 
 # Recommendation Manager 
-# echo -e "${BLUE}Building Recommendation Manager (digital-twin/recommendation-manager:latest)...${NC}"
-# docker build -t digital-twin/recommendation-manager:latest ./recommendationManager
-# echo -e "${GREEN}Successfully built Recommendation Manager${NC}"
+ echo -e "${BLUE}Building Recommendation Manager (digital-twin/recommendation-manager:latest)...${NC}"
+ docker build -t digital-twin/recommendation-manager:latest ./recommendationManager
+ echo -e "${GREEN}Successfully built Recommendation Manager${NC}"
+
+# Risk Manager
+echo -e "${BLUE}Building Risk Manager (digital-twin/risk-detector:latest)...${NC}"
+docker build -t digital-twin/risk-detector:latest ./riskDetector
+echo -e "${GREEN}Successfully built Risk Manager${NC}"
 
 # City Simulator
 echo -e "${BLUE}Building City Simulator (digital-twin/city-simulator:latest)...${NC}"
@@ -66,9 +78,19 @@ echo -e "${GREEN}Successfully built Dashboard${NC}"
 if [ "$(kubectl config current-context)" = "minikube" ]; then
     echo -e "\n${BLUE}--- Step 1.5: Loading Images into Minikube ---${NC}"
     echo "This may take a minute..."
+
+    # tools
+    minikube image load influxdb:2.7-alpine
+    minikube image load redis:7-alpine
+    minikube image load mongo:6
+    minikube image load apache/kafka:latest
+    # applications
     minikube image load digital-twin/state-manager:latest
     minikube image load digital-twin/notification-manager:latest
-    # minikube image load digital-twin/recommendation-manager:latest 
+
+    minikube image load digital-twin/recommendation-manager:latest 
+    minikube image load digital-twin/risk-detector:latest 
+
     minikube image load digital-twin/city-simulator:latest
     minikube image load digital-twin/vehicles-simulator:latest
     minikube image load digital-twin/buildings-simulator:latest

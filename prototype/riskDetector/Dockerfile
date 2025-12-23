@@ -1,50 +1,43 @@
 ###########################################################
-# Stage 1: Build the native executable using Maven
+# Stage 1: Build JVM application using Maven
 ###########################################################
 FROM quay.io/quarkus/ubi9-quarkus-mandrel-builder-image:jdk-21 AS build
 
-# Set working directory
 WORKDIR /code
 
-# Copy Maven wrapper, .mvn folder, and pom.xml
+# Copy Maven wrapper and pom.xml first to leverage Docker cache
 COPY risk_detector/mvnw /code/mvnw
 COPY risk_detector/.mvn /code/.mvn
 COPY risk_detector/pom.xml /code/
+COPY risk_detector/src /code/src
 
 # Switch to non-root user for security
 USER quarkus
 
-# Pre-download dependencies for faster build
+# Pre-download dependencies (cached if pom.xml unchanged)
 RUN ./mvnw -B org.apache.maven.plugins:maven-dependency-plugin:3.8.1:go-offline
 
 # Copy source code
 COPY risk_detector/src /code/src
 
-# Build native executable
-RUN ./mvnw package -Dnative
+# Build JVM artifact (FAST-JAR), skip tests
+RUN ./mvnw package -DskipTests
 
 ###########################################################
-# Stage 2: Create minimal runtime image
+# Stage 2: Runtime image (JVM)
 ###########################################################
-FROM quay.io/quarkus/ubi9-quarkus-micro-image:2.0
+# Stage 2: Runtime image
+FROM registry.access.redhat.com/ubi9/openjdk-21-runtime
 
-# Set working directory
-WORKDIR /work/
+# Use a directory the runtime user can write to
+WORKDIR /home/quarkus/quarkus-app
 
-# Copy native executable from build stage
-COPY --from=build /code/target/*-runner /work/application
+# Copy Quarkus fast-jar
+COPY --from=build /code/target/quarkus-app .
 
-# Set permissions and ownership for security
-RUN chmod 775 /work /work/application \
-    && chown -R 1001 /work \
-    && chmod -R "g+rwX" /work \
-    && chown -R 1001:root /work
-
-# Expose application port
 EXPOSE 8080
 
-# Run as non-root user
+# Already running as 1001 by default
 USER 1001
 
-# Start the application, listening on all network interfaces
-CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]
+CMD ["java", "-jar", "quarkus-run.jar", "-Dquarkus.http.host=0.0.0.0"]
