@@ -1,0 +1,2417 @@
+{
+  "id": "arch-1",
+  "name": "Data Architecture Model",
+  "dataNodes": [
+    {
+      "id": "node-1763807724163",
+      "name": "Sensors",
+      "position": {
+        "x": 51,
+        "y": 142
+      },
+      "size": {
+        "width": 350,
+        "height": 300
+      },
+      "messagePorts": [
+        {
+          "id": "port-in-1763807724163",
+          "name": "Input",
+          "type": "input",
+          "position": {
+            "x": 0,
+            "y": 40
+          }
+        },
+        {
+          "id": "port-out-1763807724163",
+          "name": "Output",
+          "type": "output",
+          "position": {
+            "x": 350,
+            "y": 38
+          }
+        }
+      ],
+      "behaviouralElements": [
+        {
+          "id": "node-1763807724163_behavior_1763810389006",
+          "name": "JSON",
+          "type": "JSON",
+          "position": {
+            "x": 46,
+            "y": 115
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763807724163_behavior_1763810396079",
+          "name": "Sensor Data",
+          "type": "SensorData",
+          "position": {
+            "x": 12,
+            "y": 23
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763807724163_behavior_1763810402403",
+          "name": "New SendData",
+          "type": "SendData",
+          "position": {
+            "x": 190,
+            "y": 52
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        }
+      ],
+      "internalLinks": [],
+      "isExpanded": true
+    },
+    {
+      "id": "node-1763807817271",
+      "name": "Gateway",
+      "position": {
+        "x": 534,
+        "y": 117
+      },
+      "size": {
+        "width": 972,
+        "height": 300
+      },
+      "messagePorts": [
+        {
+          "id": "port-in-1763807817271",
+          "name": "Input",
+          "type": "input",
+          "position": {
+            "x": 0,
+            "y": 40
+          }
+        },
+        {
+          "id": "port-out-1763807817271",
+          "name": "Output",
+          "type": "output",
+          "position": {
+            "x": 972,
+            "y": 39
+          }
+        },
+        {
+          "id": "port-input-node-1763807817271-1763808233728",
+          "name": "Input 2",
+          "type": "input",
+          "position": {
+            "x": 0,
+            "y": 69
+          }
+        }
+      ],
+      "behaviouralElements": [
+        {
+          "id": "node-1763807817271_behavior_1763810113759",
+          "name": "ReceiveData",
+          "type": "ReceiveData",
+          "position": {
+            "x": 34,
+            "y": 18
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763807817271_behavior_1763810126157",
+          "name": "JSON",
+          "type": "JSON",
+          "position": {
+            "x": 224,
+            "y": 17
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763807817271_behavior_1763810178279",
+          "name": "Redis",
+          "type": "KeyValue",
+          "position": {
+            "x": 452,
+            "y": 20
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763807817271_behavior_1763810215568",
+          "name": "Batch",
+          "type": "Batch",
+          "position": {
+            "x": 634,
+            "y": 22
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763807817271_behavior_1763812464271",
+          "name": "SendRawData",
+          "type": "SendData",
+          "position": {
+            "x": 812,
+            "y": 22
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763807817271_behavior_1763812501042",
+          "name": "Real Time",
+          "type": "RealTime",
+          "position": {
+            "x": 33.75390625,
+            "y": 100.328125
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763807817271_behavior_1763812511921",
+          "name": "Video",
+          "type": "Video",
+          "position": {
+            "x": 227.75390625,
+            "y": 99.328125
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763807817271_behavior_1763813167025",
+          "name": "Analyze",
+          "type": "Analyze",
+          "position": {
+            "x": 438.75390625,
+            "y": 99.328125
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763807817271_behavior_1763813484006",
+          "name": "Batch",
+          "type": "Batch",
+          "position": {
+            "x": 631.75390625,
+            "y": 100.328125
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763807817271_behavior_1763813499046",
+          "name": "SendAnalyzedData",
+          "type": "SendData",
+          "position": {
+            "x": 810,
+            "y": 104
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        }
+      ],
+      "internalLinks": [],
+      "isExpanded": true
+    },
+    {
+      "id": "node-1763808142283",
+      "name": "Camera",
+      "position": {
+        "x": 75,
+        "y": 492
+      },
+      "size": {
+        "width": 353,
+        "height": 300
+      },
+      "messagePorts": [
+        {
+          "id": "port-in-1763808142283",
+          "name": "Input",
+          "type": "input",
+          "position": {
+            "x": 0,
+            "y": 40
+          }
+        },
+        {
+          "id": "port-out-1763808142283",
+          "name": "Output",
+          "type": "output",
+          "position": {
+            "x": 353,
+            "y": 40
+          }
+        }
+      ],
+      "behaviouralElements": [
+        {
+          "id": "node-1763808142283_behavior_1763808153630",
+          "name": "Video",
+          "type": "Video",
+          "position": {
+            "x": 21,
+            "y": 34
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763808142283_behavior_1763808159891",
+          "name": "SendData",
+          "type": "SendData",
+          "position": {
+            "x": 193,
+            "y": 33
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        }
+      ],
+      "internalLinks": [],
+      "isExpanded": true
+    },
+    {
+      "id": "node-1763814588873",
+      "name": "Infrastructure Data Message Broker",
+      "position": {
+        "x": 611.015625,
+        "y": 546.5
+      },
+      "size": {
+        "width": 480,
+        "height": 415.5
+      },
+      "messagePorts": [
+        {
+          "id": "port-out-1763814588873",
+          "name": "Output",
+          "type": "output",
+          "position": {
+            "x": 480,
+            "y": 38
+          }
+        },
+        {
+          "id": "port-input-node-1763814588873-1763815483519",
+          "name": "Input 1",
+          "type": "input",
+          "position": {
+            "x": 0,
+            "y": 40
+          }
+        }
+      ],
+      "behaviouralElements": [
+        {
+          "id": "node-1763814588873_behavior_1763815078452",
+          "name": "New ReceiveData",
+          "type": "ReceiveData",
+          "position": {
+            "x": 10,
+            "y": 10
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763814588873_behavior_1763815083421",
+          "name": "Real Time",
+          "type": "RealTime",
+          "position": {
+            "x": 171.984375,
+            "y": 12.5
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763814588873_behavior_1763815089421",
+          "name": "JSON",
+          "type": "JSON",
+          "position": {
+            "x": 26.984375,
+            "y": 95.5
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763814588873_behavior_1763815100871",
+          "name": "Transform",
+          "type": "Transform",
+          "position": {
+            "x": 186.984375,
+            "y": 93.5
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763814588873_behavior_1763815107421",
+          "name": "Logs",
+          "type": "Logs",
+          "position": {
+            "x": 29.984375,
+            "y": 173.5
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763814588873_behavior_1763815115633",
+          "name": "File System",
+          "type": "File_System",
+          "position": {
+            "x": 33.984375,
+            "y": 255.5
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763814588873_behavior_1763815179504",
+          "name": "Retrieve",
+          "type": "Retrieve",
+          "position": {
+            "x": 195.984375,
+            "y": 255.5
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763814588873_behavior_1763815189557",
+          "name": "New SendData",
+          "type": "SendData",
+          "position": {
+            "x": 320,
+            "y": 170
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        }
+      ],
+      "internalLinks": [],
+      "isExpanded": true
+    },
+    {
+      "id": "node-1763815215402",
+      "name": "Data Ingestion",
+      "position": {
+        "x": 1287.00390625,
+        "y": 545.7578125
+      },
+      "size": {
+        "width": 380.6666259765625,
+        "height": 389.6499938964844
+      },
+      "messagePorts": [
+        {
+          "id": "port-in-1763815215402",
+          "name": "Input",
+          "type": "input",
+          "position": {
+            "x": 0,
+            "y": 40
+          }
+        },
+        {
+          "id": "port-out-1763815215402",
+          "name": "Output",
+          "type": "output",
+          "position": {
+            "x": 380.6666259765625,
+            "y": 40
+          }
+        }
+      ],
+      "behaviouralElements": [
+        {
+          "id": "node-1763815215402_behavior_1763815248437",
+          "name": "New ReceiveData",
+          "type": "ReceiveData",
+          "position": {
+            "x": 10,
+            "y": 10
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763815215402_behavior_1763815254580",
+          "name": "Ingest",
+          "type": "Ingest",
+          "position": {
+            "x": 184.25,
+            "y": 11.55859375
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763815215402_behavior_1763815268488",
+          "name": "On-Premise",
+          "type": "On_Premise",
+          "position": {
+            "x": 23.25,
+            "y": 88.55859375
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763815215402_behavior_1763815316145",
+          "name": "JSON",
+          "type": "JSON",
+          "position": {
+            "x": 210.6666259765625,
+            "y": 87.25
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763815215402_behavior_1763815394261",
+          "name": "Parse",
+          "type": "Archive",
+          "position": {
+            "x": 27.6666259765625,
+            "y": 156.25
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763815215402_behavior_1763815408508",
+          "name": "Save",
+          "type": "Save",
+          "position": {
+            "x": 220.6666259765625,
+            "y": 157.25
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763815215402_behavior_1763815429240",
+          "name": "InfluxDB",
+          "type": "File_System",
+          "position": {
+            "x": 38.6666259765625,
+            "y": 223.25
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763815215402_behavior_1766485306573",
+          "name": "Verify Data",
+          "type": "VerifyData",
+          "position": {
+            "x": 183.9332275390625,
+            "y": 229.64999389648438
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {
+            "QualityMetrics": [
+              "Uniqueness",
+              "Completeness",
+              "Validity"
+            ]
+          }
+        }
+      ],
+      "internalLinks": [],
+      "isExpanded": true
+    },
+    {
+      "id": "node-1763816134967",
+      "name": "Digital Twin State Manager",
+      "position": {
+        "x": 92.00390625,
+        "y": 1286.7578125
+      },
+      "size": {
+        "width": 674.6666259765625,
+        "height": 545
+      },
+      "messagePorts": [
+        {
+          "id": "port-in-1763816134967",
+          "name": "Input",
+          "type": "input",
+          "position": {
+            "x": 0,
+            "y": 40
+          }
+        },
+        {
+          "id": "port-out-1763816134967",
+          "name": "Output",
+          "type": "output",
+          "position": {
+            "x": 674.6666259765625,
+            "y": 40
+          }
+        }
+      ],
+      "behaviouralElements": [
+        {
+          "id": "node-1763816134967_behavior_1763816139073",
+          "name": "New ReceiveData",
+          "type": "ReceiveData",
+          "position": {
+            "x": 10,
+            "y": 10
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763816134967_behavior_1763816145325",
+          "name": "Real Time",
+          "type": "RealTime",
+          "position": {
+            "x": 189.765625,
+            "y": 13
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763816134967_behavior_1763816159385",
+          "name": "JSON",
+          "type": "JSON",
+          "position": {
+            "x": 375.6666259765625,
+            "y": 11.583251953125
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763816134967_behavior_1763816175676",
+          "name": "Process",
+          "type": "Process",
+          "position": {
+            "x": 53.6666259765625,
+            "y": 100.583251953125
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763816134967_behavior_1763816208752",
+          "name": "Merge",
+          "type": "Merge",
+          "position": {
+            "x": 407.6666259765625,
+            "y": 100.9166259765625
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763816134967_behavior_1763816222812",
+          "name": "JSON",
+          "type": "JSON",
+          "position": {
+            "x": 209.6666259765625,
+            "y": 100.9166259765625
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763816134967_behavior_1763816250312",
+          "name": "Redis",
+          "type": "KeyValue",
+          "position": {
+            "x": 42.6666259765625,
+            "y": 190.9166259765625
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763816134967_behavior_1763816260484",
+          "name": "Retrieve",
+          "type": "Retrieve",
+          "position": {
+            "x": 237.6666259765625,
+            "y": 191.58331298828125
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763816134967_behavior_1763816275107",
+          "name": "JSON",
+          "type": "JSON",
+          "position": {
+            "x": 514.6666259765625,
+            "y": 199.91665649414062
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763816134967_behavior_1763816321895",
+          "name": "Save",
+          "type": "Save",
+          "position": {
+            "x": 38.6666259765625,
+            "y": 278.58331298828125
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763816134967_behavior_1763816345818",
+          "name": "State Snapshots",
+          "type": "DocumentOriented",
+          "position": {
+            "x": 327.6666259765625,
+            "y": 280.25
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763816134967_behavior_1763816402504",
+          "name": "SendNewState",
+          "type": "SendData",
+          "position": {
+            "x": 342,
+            "y": 385
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        }
+      ],
+      "internalLinks": [],
+      "isExpanded": true
+    },
+    {
+      "id": "node-1763820539516",
+      "name": "Vehicles",
+      "position": {
+        "x": 80,
+        "y": 858.6666641235352
+      },
+      "size": {
+        "width": 336,
+        "height": 300
+      },
+      "messagePorts": [
+        {
+          "id": "port-in-1763820539516",
+          "name": "Input",
+          "type": "input",
+          "position": {
+            "x": 0,
+            "y": 40
+          }
+        },
+        {
+          "id": "port-out-1763820539516",
+          "name": "Output",
+          "type": "output",
+          "position": {
+            "x": 336,
+            "y": 40
+          }
+        }
+      ],
+      "behaviouralElements": [
+        {
+          "id": "node-1763820539516_behavior_1763821121219",
+          "name": "GPS Data",
+          "type": "GPSData",
+          "position": {
+            "x": 5,
+            "y": 91.33331298828125
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763820539516_behavior_1763821126118",
+          "name": "SendPosition",
+          "type": "SendData",
+          "position": {
+            "x": 176,
+            "y": 91
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        }
+      ],
+      "internalLinks": [],
+      "isExpanded": true
+    },
+    {
+      "id": "node-1763821155254",
+      "name": "Risk Detector",
+      "position": {
+        "x": 930,
+        "y": 1414.6666641235352
+      },
+      "size": {
+        "width": 405.53125,
+        "height": 490.33331298828125
+      },
+      "messagePorts": [
+        {
+          "id": "port-out-1763821155254",
+          "name": "Output",
+          "type": "output",
+          "position": {
+            "x": 405.53125,
+            "y": 40
+          }
+        },
+        {
+          "id": "port-input-node-1763821155254-1763821272573",
+          "name": "Input 1",
+          "type": "input",
+          "position": {
+            "x": 0,
+            "y": 40
+          }
+        }
+      ],
+      "behaviouralElements": [
+        {
+          "id": "node-1763821155254_behavior_1763821174929",
+          "name": "ReceiveState",
+          "type": "ReceiveData",
+          "position": {
+            "x": 9,
+            "y": 11
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763821155254_behavior_1763821222300",
+          "name": "JSON",
+          "type": "JSON",
+          "position": {
+            "x": 213.6666259765625,
+            "y": 11
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763821155254_behavior_1763821321102",
+          "name": "Process",
+          "type": "Process",
+          "position": {
+            "x": 48.53125,
+            "y": 90.9140625
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763821155254_behavior_1763821328975",
+          "name": "Analyze",
+          "type": "Analyze",
+          "position": {
+            "x": 245.53125,
+            "y": 91.9140625
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763821155254_behavior_1763821336075",
+          "name": "Predict",
+          "type": "Predict",
+          "position": {
+            "x": 49.53125,
+            "y": 174.90625
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763821155254_behavior_1763821355420",
+          "name": "JSON",
+          "type": "JSON",
+          "position": {
+            "x": 242.53125,
+            "y": 178.90625
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763821155254_behavior_1763821397328",
+          "name": "SendRisk",
+          "type": "SendData",
+          "position": {
+            "x": 239,
+            "y": 259
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763821155254_behavior_1763821404293",
+          "name": "Save",
+          "type": "Save",
+          "position": {
+            "x": 55.53125,
+            "y": 248.90625
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763821155254_behavior_1763821474704",
+          "name": "RiskDB",
+          "type": "DocumentOriented",
+          "position": {
+            "x": 237.6666259765625,
+            "y": 330.33331298828125
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        }
+      ],
+      "internalLinks": [],
+      "isExpanded": true
+    },
+    {
+      "id": "node-1763821554336",
+      "name": "Recommendation Manager",
+      "position": {
+        "x": 971.015625,
+        "y": 1996
+      },
+      "size": {
+        "width": 366,
+        "height": 440
+      },
+      "messagePorts": [
+        {
+          "id": "port-in-1763821554336",
+          "name": "Input",
+          "type": "input",
+          "position": {
+            "x": 0,
+            "y": 40
+          }
+        },
+        {
+          "id": "port-out-1763821554336",
+          "name": "Output",
+          "type": "output",
+          "position": {
+            "x": 366,
+            "y": 40
+          }
+        }
+      ],
+      "behaviouralElements": [
+        {
+          "id": "node-1763821554336_behavior_1763821586779",
+          "name": "ReceiveState",
+          "type": "ReceiveData",
+          "position": {
+            "x": 10,
+            "y": 9
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763821554336_behavior_1763821631229",
+          "name": "JSON",
+          "type": "JSON",
+          "position": {
+            "x": 193,
+            "y": 11
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763821554336_behavior_1763821640867",
+          "name": "Process",
+          "type": "Process",
+          "position": {
+            "x": 31,
+            "y": 100
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763821554336_behavior_1763821650048",
+          "name": "Analyze",
+          "type": "Analyze",
+          "position": {
+            "x": 199,
+            "y": 99
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763821554336_behavior_1763821656880",
+          "name": "Prescriptive",
+          "type": "Prescript",
+          "position": {
+            "x": 28,
+            "y": 181
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763821554336_behavior_1763822003671",
+          "name": "JSON",
+          "type": "JSON",
+          "position": {
+            "x": 197.5,
+            "y": 178.578125
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763821554336_behavior_1763822012041",
+          "name": "SendRecommendation",
+          "type": "SendData",
+          "position": {
+            "x": 206,
+            "y": 280
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        }
+      ],
+      "internalLinks": [],
+      "isExpanded": true
+    },
+    {
+      "id": "node-1763822055795",
+      "name": "Notification Manager",
+      "position": {
+        "x": 1540.015625,
+        "y": 1622.5
+      },
+      "size": {
+        "width": 529,
+        "height": 390.0703125
+      },
+      "messagePorts": [
+        {
+          "id": "port-in-1763822055795",
+          "name": "Input",
+          "type": "input",
+          "position": {
+            "x": 0,
+            "y": 40
+          }
+        },
+        {
+          "id": "port-out-1763822055795",
+          "name": "Output",
+          "type": "output",
+          "position": {
+            "x": 529,
+            "y": 40
+          }
+        }
+      ],
+      "behaviouralElements": [
+        {
+          "id": "node-1763822055795_behavior_1763822073617",
+          "name": "ReceiveData",
+          "type": "ReceiveData",
+          "position": {
+            "x": 10,
+            "y": 10
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763822055795_behavior_1763822607853",
+          "name": "Process",
+          "type": "Process",
+          "position": {
+            "x": 324.515625,
+            "y": 10
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763822055795_behavior_1763822631768",
+          "name": "Cleaning",
+          "type": "Cleaning",
+          "position": {
+            "x": 24.515625,
+            "y": 90.0703125
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763822055795_behavior_1763822704406",
+          "name": "Integrate",
+          "type": "Integrate",
+          "position": {
+            "x": 193.515625,
+            "y": 91.0703125
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763822055795_behavior_1763822744686",
+          "name": "Batch",
+          "type": "Batch",
+          "position": {
+            "x": 165.515625,
+            "y": 10.0703125
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763822055795_behavior_1763822829698",
+          "name": "JSON",
+          "type": "JSON",
+          "position": {
+            "x": 360.5,
+            "y": 92.0703125
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763822055795_behavior_1763822841550",
+          "name": "Save",
+          "type": "Save",
+          "position": {
+            "x": 99.5,
+            "y": 167.0703125
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763822055795_behavior_1763822883359",
+          "name": "NotificationsDB",
+          "type": "ColumnOriented",
+          "position": {
+            "x": 32.5,
+            "y": 230.0703125
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763822055795_behavior_1763822907966",
+          "name": "SendData",
+          "type": "SendData",
+          "position": {
+            "x": 369,
+            "y": 159
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763822055795_behavior_1766485563149",
+          "name": "Verify Data",
+          "type": "VerifyData",
+          "position": {
+            "x": 204.7999267578125,
+            "y": 220.699951171875
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {
+            "QualityMetrics": [
+              "Completeness",
+              "Consistency",
+              "Validity"
+            ]
+          }
+        }
+      ],
+      "internalLinks": [],
+      "isExpanded": true
+    },
+    {
+      "id": "node-1763823018619",
+      "name": "User Manager",
+      "position": {
+        "x": 929.015625,
+        "y": 1046
+      },
+      "size": {
+        "width": 520,
+        "height": 300
+      },
+      "messagePorts": [
+        {
+          "id": "port-in-1763823018619",
+          "name": "Input",
+          "type": "input",
+          "position": {
+            "x": 0,
+            "y": 40
+          }
+        },
+        {
+          "id": "port-out-1763823018619",
+          "name": "Output",
+          "type": "output",
+          "position": {
+            "x": 520,
+            "y": 40
+          }
+        }
+      ],
+      "behaviouralElements": [
+        {
+          "id": "node-1763823018619_behavior_1763823102657",
+          "name": "Relational",
+          "type": "Relational",
+          "position": {
+            "x": 22.03125,
+            "y": 31.09375
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763823018619_behavior_1763823120676",
+          "name": "API",
+          "type": "API",
+          "position": {
+            "x": 160.5078125,
+            "y": 117.578125
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763823018619_behavior_1763823131705",
+          "name": "SendData",
+          "type": "SendData",
+          "position": {
+            "x": 360,
+            "y": 84
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763823018619_behavior_1763823150919",
+          "name": "Retrieve",
+          "type": "Retrieve",
+          "position": {
+            "x": 233,
+            "y": 23
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        }
+      ],
+      "internalLinks": [],
+      "isExpanded": true
+    },
+    {
+      "id": "node-1763823369058",
+      "name": "Notification Sender",
+      "position": {
+        "x": 1727.015625,
+        "y": 1084.5
+      },
+      "size": {
+        "width": 916,
+        "height": 335.5546875
+      },
+      "messagePorts": [
+        {
+          "id": "port-in-1763823369058",
+          "name": "Input",
+          "type": "input",
+          "position": {
+            "x": 0,
+            "y": 40
+          }
+        },
+        {
+          "id": "port-out-1763823369058",
+          "name": "Output",
+          "type": "output",
+          "position": {
+            "x": 916,
+            "y": 40
+          }
+        }
+      ],
+      "behaviouralElements": [
+        {
+          "id": "node-1763823369058_behavior_1763823383488",
+          "name": "New ReceiveData",
+          "type": "ReceiveData",
+          "position": {
+            "x": 10,
+            "y": 10
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763823369058_behavior_1763823405474",
+          "name": "Batch",
+          "type": "Batch",
+          "position": {
+            "x": 184.5078125,
+            "y": 8.0625
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763823369058_behavior_1763823422456",
+          "name": "Classify",
+          "type": "Classify",
+          "position": {
+            "x": 28.5078125,
+            "y": 143.0625
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763823369058_behavior_1763823434445",
+          "name": "SMS",
+          "type": "SMS",
+          "position": {
+            "x": 542.5078125,
+            "y": 86.0625
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763823369058_behavior_1763823437508",
+          "name": "Email",
+          "type": "Email",
+          "position": {
+            "x": 539.5078125,
+            "y": 174.0625
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763823369058_behavior_1763823516532",
+          "name": "JSON",
+          "type": "JSON",
+          "position": {
+            "x": 208.0078125,
+            "y": 174.5625
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763823369058_behavior_1763823521566",
+          "name": "JSON",
+          "type": "JSON",
+          "position": {
+            "x": 208.0078125,
+            "y": 87.5546875
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763823369058_behavior_1763823523875",
+          "name": "Transform",
+          "type": "Transform",
+          "position": {
+            "x": 383.0078125,
+            "y": 175.5546875
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763823369058_behavior_1763823525348",
+          "name": "Transform",
+          "type": "Transform",
+          "position": {
+            "x": 380.0078125,
+            "y": 86.5546875
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        },
+        {
+          "id": "node-1763823369058_behavior_1763823599706",
+          "name": "SendNotification",
+          "type": "SendData",
+          "position": {
+            "x": 756,
+            "y": 120
+          },
+          "size": {
+            "width": 120,
+            "height": 40
+          },
+          "properties": {}
+        }
+      ],
+      "internalLinks": [],
+      "isExpanded": true
+    }
+  ],
+  "connections": [
+    {
+      "id": "conn-1763807826346",
+      "sourceNodeId": "node-1763807724163",
+      "targetNodeId": "node-1763807817271",
+      "sourcePortId": "port-out-1763807724163",
+      "targetPortId": "port-in-1763807817271",
+      "label": "Data Flow"
+    },
+    {
+      "id": "conn-1763808217102",
+      "sourceNodeId": "node-1763808142283",
+      "targetNodeId": "node-1763807817271",
+      "sourcePortId": "port-out-1763808142283",
+      "targetPortId": "port-input-node-1763807817271-1763808109142",
+      "label": "Data Flow"
+    },
+    {
+      "id": "conn-1763808236654",
+      "sourceNodeId": "node-1763808142283",
+      "targetNodeId": "node-1763807817271",
+      "sourcePortId": "port-out-1763808142283",
+      "targetPortId": "port-input-node-1763807817271-1763808233728",
+      "label": "Data Flow"
+    },
+    {
+      "id": "conn-1763815493744",
+      "sourceNodeId": "node-1763807817271",
+      "targetNodeId": "node-1763814588873",
+      "sourcePortId": "port-out-1763807817271",
+      "targetPortId": "port-input-node-1763814588873-1763815483519",
+      "label": "Data Flow"
+    },
+    {
+      "id": "conn-1763815537275",
+      "sourceNodeId": "node-1763814588873",
+      "targetNodeId": "node-1763815215402",
+      "sourcePortId": "port-out-1763814588873",
+      "targetPortId": "port-in-1763815215402",
+      "label": "Data Flow"
+    },
+    {
+      "id": "conn-1763821050712",
+      "sourceNodeId": "node-1763814588873",
+      "targetNodeId": "node-1763816134967",
+      "sourcePortId": "port-out-1763814588873",
+      "targetPortId": "port-in-1763816134967",
+      "label": "Data Flow"
+    },
+    {
+      "id": "conn-1763821144411",
+      "sourceNodeId": "node-1763820539516",
+      "targetNodeId": "node-1763814588873",
+      "sourcePortId": "port-out-1763820539516",
+      "targetPortId": "port-input-node-1763814588873-1763815483519",
+      "label": "Data Flow"
+    },
+    {
+      "id": "conn-1763821275134",
+      "sourceNodeId": "node-1763816134967",
+      "targetNodeId": "node-1763821155254",
+      "sourcePortId": "port-out-1763816134967",
+      "targetPortId": "port-input-node-1763821155254-1763821272573",
+      "label": "Data Flow"
+    },
+    {
+      "id": "conn-1763823235538",
+      "sourceNodeId": "node-1763821155254",
+      "targetNodeId": "node-1763822055795",
+      "sourcePortId": "port-out-1763821155254",
+      "targetPortId": "port-in-1763822055795",
+      "label": "Data Flow"
+    },
+    {
+      "id": "conn-1763823240090",
+      "sourceNodeId": "node-1763821554336",
+      "targetNodeId": "node-1763822055795",
+      "sourcePortId": "port-out-1763821554336",
+      "targetPortId": "port-in-1763822055795",
+      "label": "Data Flow"
+    },
+    {
+      "id": "conn-1763823298279",
+      "sourceNodeId": "node-1763823018619",
+      "targetNodeId": "node-1763822055795",
+      "sourcePortId": "port-out-1763823018619",
+      "targetPortId": "port-in-1763822055795",
+      "label": "Data Flow"
+    },
+    {
+      "id": "conn-1763823355124",
+      "sourceNodeId": "node-1763816134967",
+      "targetNodeId": "node-1763821554336",
+      "sourcePortId": "port-out-1763816134967",
+      "targetPortId": "port-in-1763821554336",
+      "label": "Data Flow"
+    },
+    {
+      "id": "conn-1763823389250",
+      "sourceNodeId": "node-1763822055795",
+      "targetNodeId": "node-1763823369058",
+      "sourcePortId": "port-out-1763822055795",
+      "targetPortId": "port-in-1763823369058",
+      "label": "Data Flow"
+    }
+  ],
+  "internalConnections": [
+    {
+      "id": "internal-conn-1763807831160-0.5570510406741536",
+      "sourceElementId": "port-in-1763807817271",
+      "targetElementId": "node-1763807817271_behavior_1763807831160",
+      "nodeId": "node-1763807817271"
+    },
+    {
+      "id": "internal-conn-1763807921473",
+      "sourceElementId": "node-1763807724163_behavior_1763807749957",
+      "targetElementId": "port-out-1763807724163",
+      "nodeId": "node-1763807724163"
+    },
+    {
+      "id": "internal-conn-1763807955209-0.9676777042203231",
+      "sourceElementId": "node-1763807724163_behavior_1763807955209",
+      "targetElementId": "port-out-1763807724163",
+      "nodeId": "node-1763807724163"
+    },
+    {
+      "id": "internal-conn-1763807960370",
+      "sourceElementId": "node-1763807724163_behavior_1763807944129",
+      "targetElementId": "node-1763807724163_behavior_1763807955209",
+      "nodeId": "node-1763807724163"
+    },
+    {
+      "id": "internal-conn-1763808159891-0.5316154887924767",
+      "sourceElementId": "node-1763808142283_behavior_1763808159891",
+      "targetElementId": "port-out-1763808142283",
+      "nodeId": "node-1763808142283"
+    },
+    {
+      "id": "internal-conn-1763808166140",
+      "sourceElementId": "node-1763808142283_behavior_1763808153630",
+      "targetElementId": "node-1763808142283_behavior_1763808159891",
+      "nodeId": "node-1763808142283"
+    },
+    {
+      "id": "internal-conn-1763808182321-0.3825225971003615",
+      "sourceElementId": "port-in-1763807817271",
+      "targetElementId": "node-1763807817271_behavior_1763808182321",
+      "nodeId": "node-1763807817271"
+    },
+    {
+      "id": "internal-conn-1763808962990",
+      "sourceElementId": "node-1763807817271_behavior_1763807831160",
+      "targetElementId": "node-1763807817271_behavior_1763808948876",
+      "nodeId": "node-1763807817271"
+    },
+    {
+      "id": "internal-conn-1763809106877",
+      "sourceElementId": "node-1763807817271_behavior_1763808948876",
+      "targetElementId": "node-1763807817271_behavior_1763809104236",
+      "nodeId": "node-1763807817271"
+    },
+    {
+      "id": "internal-conn-1763810112207-0.2747729099184616",
+      "sourceElementId": "node-1763807817271_behavior_1763810112207",
+      "targetElementId": "port-out-1763807817271",
+      "nodeId": "node-1763807817271"
+    },
+    {
+      "id": "internal-conn-1763810113759-0.9076939511913036",
+      "sourceElementId": "port-in-1763807817271",
+      "targetElementId": "node-1763807817271_behavior_1763810113759",
+      "nodeId": "node-1763807817271"
+    },
+    {
+      "id": "internal-conn-1763810113759-0.7812014119511081",
+      "sourceElementId": "port-input-node-1763807817271-1763808233728",
+      "targetElementId": "node-1763807817271_behavior_1763810113759",
+      "nodeId": "node-1763807817271"
+    },
+    {
+      "id": "internal-conn-1763810141219",
+      "sourceElementId": "node-1763807817271_behavior_1763810113759",
+      "targetElementId": "node-1763807817271_behavior_1763810126157",
+      "nodeId": "node-1763807817271"
+    },
+    {
+      "id": "internal-conn-1763810191364",
+      "sourceElementId": "node-1763807817271_behavior_1763810126157",
+      "targetElementId": "node-1763807817271_behavior_1763810178279",
+      "nodeId": "node-1763807817271"
+    },
+    {
+      "id": "internal-conn-1763810218094",
+      "sourceElementId": "node-1763807817271_behavior_1763810178279",
+      "targetElementId": "node-1763807817271_behavior_1763810215568",
+      "nodeId": "node-1763807817271"
+    },
+    {
+      "id": "internal-conn-1763810398633",
+      "sourceElementId": "node-1763807724163_behavior_1763810396079",
+      "targetElementId": "node-1763807724163_behavior_1763810389006",
+      "nodeId": "node-1763807724163"
+    },
+    {
+      "id": "internal-conn-1763810402403-0.5897817282703472",
+      "sourceElementId": "node-1763807724163_behavior_1763810402403",
+      "targetElementId": "port-out-1763807724163",
+      "nodeId": "node-1763807724163"
+    },
+    {
+      "id": "internal-conn-1763810406061",
+      "sourceElementId": "node-1763807724163_behavior_1763810389006",
+      "targetElementId": "node-1763807724163_behavior_1763810402403",
+      "nodeId": "node-1763807724163"
+    },
+    {
+      "id": "internal-conn-1763812464271-0.22224277758199418",
+      "sourceElementId": "node-1763807817271_behavior_1763812464271",
+      "targetElementId": "port-out-1763807817271",
+      "nodeId": "node-1763807817271"
+    },
+    {
+      "id": "internal-conn-1763812477167",
+      "sourceElementId": "node-1763807817271_behavior_1763810215568",
+      "targetElementId": "node-1763807817271_behavior_1763812464271",
+      "nodeId": "node-1763807817271"
+    },
+    {
+      "id": "internal-conn-1763812508502",
+      "sourceElementId": "node-1763807817271_behavior_1763810113759",
+      "targetElementId": "node-1763807817271_behavior_1763812501042",
+      "nodeId": "node-1763807817271"
+    },
+    {
+      "id": "internal-conn-1763812513807",
+      "sourceElementId": "node-1763807817271_behavior_1763812501042",
+      "targetElementId": "node-1763807817271_behavior_1763812511921",
+      "nodeId": "node-1763807817271"
+    },
+    {
+      "id": "internal-conn-1763813173066",
+      "sourceElementId": "node-1763807817271_behavior_1763812511921",
+      "targetElementId": "node-1763807817271_behavior_1763813167025",
+      "nodeId": "node-1763807817271"
+    },
+    {
+      "id": "internal-conn-1763813178894",
+      "sourceElementId": "node-1763807817271_behavior_1763810126157",
+      "targetElementId": "node-1763807817271_behavior_1763813167025",
+      "nodeId": "node-1763807817271"
+    },
+    {
+      "id": "internal-conn-1763813375947",
+      "sourceElementId": "node-1763807817271_behavior_1763813167025",
+      "targetElementId": "node-1763807817271_behavior_1763810178279",
+      "nodeId": "node-1763807817271"
+    },
+    {
+      "id": "internal-conn-1763813490625",
+      "sourceElementId": "node-1763807817271_behavior_1763810178279",
+      "targetElementId": "node-1763807817271_behavior_1763813484006",
+      "nodeId": "node-1763807817271"
+    },
+    {
+      "id": "internal-conn-1763813499046-0.6605799623676836",
+      "sourceElementId": "node-1763807817271_behavior_1763813499046",
+      "targetElementId": "port-out-1763807817271",
+      "nodeId": "node-1763807817271"
+    },
+    {
+      "id": "internal-conn-1763813504930",
+      "sourceElementId": "node-1763807817271_behavior_1763813484006",
+      "targetElementId": "node-1763807817271_behavior_1763813499046",
+      "nodeId": "node-1763807817271"
+    },
+    {
+      "id": "internal-conn-1763814972164",
+      "sourceElementId": "node-1763814588873_behavior_1763814864777",
+      "targetElementId": "node-1763814588873_behavior_1763814961328",
+      "nodeId": "node-1763814588873"
+    },
+    {
+      "id": "internal-conn-1763814991292-0.6774874474838017",
+      "sourceElementId": "node-1763814588873_behavior_1763814991292",
+      "targetElementId": "port-out-1763814588873",
+      "nodeId": "node-1763814588873"
+    },
+    {
+      "id": "internal-conn-1763814995092",
+      "sourceElementId": "node-1763814588873_behavior_1763814993337",
+      "targetElementId": "node-1763814588873_behavior_1763814988315",
+      "nodeId": "node-1763814588873"
+    },
+    {
+      "id": "internal-conn-1763815008134",
+      "sourceElementId": "node-1763814588873_behavior_1763814988315",
+      "targetElementId": "node-1763814588873_behavior_1763815004664",
+      "nodeId": "node-1763814588873"
+    },
+    {
+      "id": "internal-conn-1763815064341",
+      "sourceElementId": "node-1763814588873_behavior_1763815004664",
+      "targetElementId": "node-1763814588873_behavior_1763815060426",
+      "nodeId": "node-1763814588873"
+    },
+    {
+      "id": "internal-conn-1763815068532",
+      "sourceElementId": "node-1763814588873_behavior_1763815060426",
+      "targetElementId": "node-1763814588873_behavior_1763815051759",
+      "nodeId": "node-1763814588873"
+    },
+    {
+      "id": "internal-conn-1763815092223",
+      "sourceElementId": "node-1763814588873_behavior_1763815078452",
+      "targetElementId": "node-1763814588873_behavior_1763815083421",
+      "nodeId": "node-1763814588873"
+    },
+    {
+      "id": "internal-conn-1763815095202",
+      "sourceElementId": "node-1763814588873_behavior_1763815083421",
+      "targetElementId": "node-1763814588873_behavior_1763815089421",
+      "nodeId": "node-1763814588873"
+    },
+    {
+      "id": "internal-conn-1763815104133",
+      "sourceElementId": "node-1763814588873_behavior_1763815089421",
+      "targetElementId": "node-1763814588873_behavior_1763815100871",
+      "nodeId": "node-1763814588873"
+    },
+    {
+      "id": "internal-conn-1763815109563",
+      "sourceElementId": "node-1763814588873_behavior_1763815100871",
+      "targetElementId": "node-1763814588873_behavior_1763815107421",
+      "nodeId": "node-1763814588873"
+    },
+    {
+      "id": "internal-conn-1763815118260",
+      "sourceElementId": "node-1763814588873_behavior_1763815107421",
+      "targetElementId": "node-1763814588873_behavior_1763815115633",
+      "nodeId": "node-1763814588873"
+    },
+    {
+      "id": "internal-conn-1763815181975",
+      "sourceElementId": "node-1763814588873_behavior_1763815115633",
+      "targetElementId": "node-1763814588873_behavior_1763815179504",
+      "nodeId": "node-1763814588873"
+    },
+    {
+      "id": "internal-conn-1763815189557-0.917372735894749",
+      "sourceElementId": "node-1763814588873_behavior_1763815189557",
+      "targetElementId": "port-out-1763814588873",
+      "nodeId": "node-1763814588873"
+    },
+    {
+      "id": "internal-conn-1763815196074",
+      "sourceElementId": "node-1763814588873_behavior_1763815179504",
+      "targetElementId": "node-1763814588873_behavior_1763815189557",
+      "nodeId": "node-1763814588873"
+    },
+    {
+      "id": "internal-conn-1763815199555",
+      "sourceElementId": "node-1763814588873_behavior_1763815107421",
+      "targetElementId": "node-1763814588873_behavior_1763815189557",
+      "nodeId": "node-1763814588873"
+    },
+    {
+      "id": "internal-conn-1763815222457-0.5586296382793958",
+      "sourceElementId": "port-in-1763815215402",
+      "targetElementId": "node-1763815215402_behavior_1763815222457",
+      "nodeId": "node-1763815215402"
+    },
+    {
+      "id": "internal-conn-1763815239113",
+      "sourceElementId": "node-1763815215402_behavior_1763815222457",
+      "targetElementId": "node-1763815215402_behavior_1763815228660",
+      "nodeId": "node-1763815215402"
+    },
+    {
+      "id": "internal-conn-1763815248437-0.6253167119836706",
+      "sourceElementId": "port-in-1763815215402",
+      "targetElementId": "node-1763815215402_behavior_1763815248437",
+      "nodeId": "node-1763815215402"
+    },
+    {
+      "id": "internal-conn-1763815257748",
+      "sourceElementId": "node-1763815215402_behavior_1763815248437",
+      "targetElementId": "node-1763815215402_behavior_1763815254580",
+      "nodeId": "node-1763815215402"
+    },
+    {
+      "id": "internal-conn-1763815293952",
+      "sourceElementId": "node-1763815215402_behavior_1763815254580",
+      "targetElementId": "node-1763815215402_behavior_1763815268488",
+      "nodeId": "node-1763815215402"
+    },
+    {
+      "id": "internal-conn-1763815322867",
+      "sourceElementId": "node-1763815215402_behavior_1763815268488",
+      "targetElementId": "node-1763815215402_behavior_1763815316145",
+      "nodeId": "node-1763815215402"
+    },
+    {
+      "id": "internal-conn-1763815400058",
+      "sourceElementId": "node-1763815215402_behavior_1763815316145",
+      "targetElementId": "node-1763815215402_behavior_1763815394261",
+      "nodeId": "node-1763815215402"
+    },
+    {
+      "id": "internal-conn-1763815421339",
+      "sourceElementId": "node-1763815215402_behavior_1763815394261",
+      "targetElementId": "node-1763815215402_behavior_1763815408508",
+      "nodeId": "node-1763815215402"
+    },
+    {
+      "id": "internal-conn-1763816139073-0.19751749667792173",
+      "sourceElementId": "port-in-1763816134967",
+      "targetElementId": "node-1763816134967_behavior_1763816139073",
+      "nodeId": "node-1763816134967"
+    },
+    {
+      "id": "internal-conn-1763816181564",
+      "sourceElementId": "node-1763816134967_behavior_1763816139073",
+      "targetElementId": "node-1763816134967_behavior_1763816145325",
+      "nodeId": "node-1763816134967"
+    },
+    {
+      "id": "internal-conn-1763816186029",
+      "sourceElementId": "node-1763816134967_behavior_1763816145325",
+      "targetElementId": "node-1763816134967_behavior_1763816159385",
+      "nodeId": "node-1763816134967"
+    },
+    {
+      "id": "internal-conn-1763816193644",
+      "sourceElementId": "node-1763816134967_behavior_1763816159385",
+      "targetElementId": "node-1763816134967_behavior_1763816175676",
+      "nodeId": "node-1763816134967"
+    },
+    {
+      "id": "internal-conn-1763816240471",
+      "sourceElementId": "node-1763816134967_behavior_1763816175676",
+      "targetElementId": "node-1763816134967_behavior_1763816222812",
+      "nodeId": "node-1763816134967"
+    },
+    {
+      "id": "internal-conn-1763816241986",
+      "sourceElementId": "node-1763816134967_behavior_1763816222812",
+      "targetElementId": "node-1763816134967_behavior_1763816208752",
+      "nodeId": "node-1763816134967"
+    },
+    {
+      "id": "internal-conn-1763816305033",
+      "sourceElementId": "node-1763816134967_behavior_1763816208752",
+      "targetElementId": "node-1763816134967_behavior_1763816275107",
+      "nodeId": "node-1763816134967"
+    },
+    {
+      "id": "internal-conn-1763816307834",
+      "sourceElementId": "node-1763816134967_behavior_1763816250312",
+      "targetElementId": "node-1763816134967_behavior_1763816260484",
+      "nodeId": "node-1763816134967"
+    },
+    {
+      "id": "internal-conn-1763816309402",
+      "sourceElementId": "node-1763816134967_behavior_1763816260484",
+      "targetElementId": "node-1763816134967_behavior_1763816208752",
+      "nodeId": "node-1763816134967"
+    },
+    {
+      "id": "internal-conn-1763816329659",
+      "sourceElementId": "node-1763816134967_behavior_1763816275107",
+      "targetElementId": "node-1763816134967_behavior_1763816321895",
+      "nodeId": "node-1763816134967"
+    },
+    {
+      "id": "internal-conn-1763816333625",
+      "sourceElementId": "node-1763816134967_behavior_1763816321895",
+      "targetElementId": "node-1763816134967_behavior_1763816250312",
+      "nodeId": "node-1763816134967"
+    },
+    {
+      "id": "internal-conn-1763816350218",
+      "sourceElementId": "node-1763816134967_behavior_1763816321895",
+      "targetElementId": "node-1763816134967_behavior_1763816345818",
+      "nodeId": "node-1763816134967"
+    },
+    {
+      "id": "internal-conn-1763816402504-0.22007730698759687",
+      "sourceElementId": "node-1763816134967_behavior_1763816402504",
+      "targetElementId": "port-out-1763816134967",
+      "nodeId": "node-1763816134967"
+    },
+    {
+      "id": "internal-conn-1763816410759",
+      "sourceElementId": "node-1763816134967_behavior_1763816321895",
+      "targetElementId": "node-1763816134967_behavior_1763816402504",
+      "nodeId": "node-1763816134967"
+    },
+    {
+      "id": "internal-conn-1763821126118-0.439270315085172",
+      "sourceElementId": "node-1763820539516_behavior_1763821126118",
+      "targetElementId": "port-out-1763820539516",
+      "nodeId": "node-1763820539516"
+    },
+    {
+      "id": "internal-conn-1763821136402",
+      "sourceElementId": "node-1763820539516_behavior_1763821121219",
+      "targetElementId": "node-1763820539516_behavior_1763821126118",
+      "nodeId": "node-1763820539516"
+    },
+    {
+      "id": "internal-conn-1763821268149",
+      "sourceElementId": "node-1763821155254_behavior_1763821174929",
+      "targetElementId": "node-1763821155254_behavior_1763821222300",
+      "nodeId": "node-1763821155254"
+    },
+    {
+      "id": "internal-conn-1763821323341",
+      "sourceElementId": "node-1763821155254_behavior_1763821222300",
+      "targetElementId": "node-1763821155254_behavior_1763821321102",
+      "nodeId": "node-1763821155254"
+    },
+    {
+      "id": "internal-conn-1763821331087",
+      "sourceElementId": "node-1763821155254_behavior_1763821321102",
+      "targetElementId": "node-1763821155254_behavior_1763821328975",
+      "nodeId": "node-1763821155254"
+    },
+    {
+      "id": "internal-conn-1763821338489",
+      "sourceElementId": "node-1763821155254_behavior_1763821328975",
+      "targetElementId": "node-1763821155254_behavior_1763821336075",
+      "nodeId": "node-1763821155254"
+    },
+    {
+      "id": "internal-conn-1763821397328-0.766214873550928",
+      "sourceElementId": "node-1763821155254_behavior_1763821397328",
+      "targetElementId": "port-out-1763821155254",
+      "nodeId": "node-1763821155254"
+    },
+    {
+      "id": "internal-conn-1763821442313",
+      "sourceElementId": "node-1763821155254_behavior_1763821336075",
+      "targetElementId": "node-1763821155254_behavior_1763821355420",
+      "nodeId": "node-1763821155254"
+    },
+    {
+      "id": "internal-conn-1763821444467",
+      "sourceElementId": "node-1763821155254_behavior_1763821355420",
+      "targetElementId": "node-1763821155254_behavior_1763821404293",
+      "nodeId": "node-1763821155254"
+    },
+    {
+      "id": "internal-conn-1763821455317",
+      "sourceElementId": "node-1763821155254_behavior_1763821404293",
+      "targetElementId": "node-1763821155254_behavior_1763821397328",
+      "nodeId": "node-1763821155254"
+    },
+    {
+      "id": "internal-conn-1763821479235",
+      "sourceElementId": "node-1763821155254_behavior_1763821404293",
+      "targetElementId": "node-1763821155254_behavior_1763821474704",
+      "nodeId": "node-1763821155254"
+    },
+    {
+      "id": "internal-conn-1763821586779-0.7952510771280646",
+      "sourceElementId": "port-in-1763821554336",
+      "targetElementId": "node-1763821554336_behavior_1763821586779",
+      "nodeId": "node-1763821554336"
+    },
+    {
+      "id": "internal-conn-1763822012041-0.0534040937652136",
+      "sourceElementId": "node-1763821554336_behavior_1763822012041",
+      "targetElementId": "port-out-1763821554336",
+      "nodeId": "node-1763821554336"
+    },
+    {
+      "id": "internal-conn-1763822032819",
+      "sourceElementId": "node-1763821554336_behavior_1763821586779",
+      "targetElementId": "node-1763821554336_behavior_1763821631229",
+      "nodeId": "node-1763821554336"
+    },
+    {
+      "id": "internal-conn-1763822036312",
+      "sourceElementId": "node-1763821554336_behavior_1763821631229",
+      "targetElementId": "node-1763821554336_behavior_1763821640867",
+      "nodeId": "node-1763821554336"
+    },
+    {
+      "id": "internal-conn-1763822038694",
+      "sourceElementId": "node-1763821554336_behavior_1763821640867",
+      "targetElementId": "node-1763821554336_behavior_1763821650048",
+      "nodeId": "node-1763821554336"
+    },
+    {
+      "id": "internal-conn-1763822041341",
+      "sourceElementId": "node-1763821554336_behavior_1763821650048",
+      "targetElementId": "node-1763821554336_behavior_1763821656880",
+      "nodeId": "node-1763821554336"
+    },
+    {
+      "id": "internal-conn-1763822042916",
+      "sourceElementId": "node-1763821554336_behavior_1763821656880",
+      "targetElementId": "node-1763821554336_behavior_1763822003671",
+      "nodeId": "node-1763821554336"
+    },
+    {
+      "id": "internal-conn-1763822044744",
+      "sourceElementId": "node-1763821554336_behavior_1763822003671",
+      "targetElementId": "node-1763821554336_behavior_1763822012041",
+      "nodeId": "node-1763821554336"
+    },
+    {
+      "id": "internal-conn-1763822073617-0.30334717574849235",
+      "sourceElementId": "port-in-1763822055795",
+      "targetElementId": "node-1763822055795_behavior_1763822073617",
+      "nodeId": "node-1763822055795"
+    },
+    {
+      "id": "internal-conn-1763822907966-0.6496018051686917",
+      "sourceElementId": "node-1763822055795_behavior_1763822907966",
+      "targetElementId": "port-out-1763822055795",
+      "nodeId": "node-1763822055795"
+    },
+    {
+      "id": "internal-conn-1763822968384",
+      "sourceElementId": "node-1763822055795_behavior_1763822073617",
+      "targetElementId": "node-1763822055795_behavior_1763822744686",
+      "nodeId": "node-1763822055795"
+    },
+    {
+      "id": "internal-conn-1763822970138",
+      "sourceElementId": "node-1763822055795_behavior_1763822744686",
+      "targetElementId": "node-1763822055795_behavior_1763822607853",
+      "nodeId": "node-1763822055795"
+    },
+    {
+      "id": "internal-conn-1763822975797",
+      "sourceElementId": "node-1763822055795_behavior_1763822607853",
+      "targetElementId": "node-1763822055795_behavior_1763822631768",
+      "nodeId": "node-1763822055795"
+    },
+    {
+      "id": "internal-conn-1763822977433",
+      "sourceElementId": "node-1763822055795_behavior_1763822631768",
+      "targetElementId": "node-1763822055795_behavior_1763822704406",
+      "nodeId": "node-1763822055795"
+    },
+    {
+      "id": "internal-conn-1763822987833",
+      "sourceElementId": "node-1763822055795_behavior_1763822704406",
+      "targetElementId": "node-1763822055795_behavior_1763822829698",
+      "nodeId": "node-1763822055795"
+    },
+    {
+      "id": "internal-conn-1763822990203",
+      "sourceElementId": "node-1763822055795_behavior_1763822829698",
+      "targetElementId": "node-1763822055795_behavior_1763822841550",
+      "nodeId": "node-1763822055795"
+    },
+    {
+      "id": "internal-conn-1763822991673",
+      "sourceElementId": "node-1763822055795_behavior_1763822841550",
+      "targetElementId": "node-1763822055795_behavior_1763822907966",
+      "nodeId": "node-1763822055795"
+    },
+    {
+      "id": "internal-conn-1763822993396",
+      "sourceElementId": "node-1763822055795_behavior_1763822841550",
+      "targetElementId": "node-1763822055795_behavior_1763822883359",
+      "nodeId": "node-1763822055795"
+    },
+    {
+      "id": "internal-conn-1763823131705-0.37186845617330566",
+      "sourceElementId": "node-1763823018619_behavior_1763823131705",
+      "targetElementId": "port-out-1763823018619",
+      "nodeId": "node-1763823018619"
+    },
+    {
+      "id": "internal-conn-1763823163145",
+      "sourceElementId": "node-1763823018619_behavior_1763823102657",
+      "targetElementId": "node-1763823018619_behavior_1763823150919",
+      "nodeId": "node-1763823018619"
+    },
+    {
+      "id": "internal-conn-1763823165208",
+      "sourceElementId": "node-1763823018619_behavior_1763823150919",
+      "targetElementId": "node-1763823018619_behavior_1763823120676",
+      "nodeId": "node-1763823018619"
+    },
+    {
+      "id": "internal-conn-1763823177108",
+      "sourceElementId": "node-1763823018619_behavior_1763823120676",
+      "targetElementId": "node-1763823018619_behavior_1763823131705",
+      "nodeId": "node-1763823018619"
+    },
+    {
+      "id": "internal-conn-1763823383489-0.2963921663443856",
+      "sourceElementId": "port-in-1763823369058",
+      "targetElementId": "node-1763823369058_behavior_1763823383488",
+      "nodeId": "node-1763823369058"
+    },
+    {
+      "id": "internal-conn-1763823491557",
+      "sourceElementId": "node-1763823369058_behavior_1763823383488",
+      "targetElementId": "node-1763823369058_behavior_1763823405474",
+      "nodeId": "node-1763823369058"
+    },
+    {
+      "id": "internal-conn-1763823496454",
+      "sourceElementId": "node-1763823369058_behavior_1763823405474",
+      "targetElementId": "node-1763823369058_behavior_1763823422456",
+      "nodeId": "node-1763823369058"
+    },
+    {
+      "id": "internal-conn-1763823540456",
+      "sourceElementId": "node-1763823369058_behavior_1763823422456",
+      "targetElementId": "node-1763823369058_behavior_1763823521566",
+      "nodeId": "node-1763823369058"
+    },
+    {
+      "id": "internal-conn-1763823550118",
+      "sourceElementId": "node-1763823369058_behavior_1763823422456",
+      "targetElementId": "node-1763823369058_behavior_1763823516532",
+      "nodeId": "node-1763823369058"
+    },
+    {
+      "id": "internal-conn-1763823563690",
+      "sourceElementId": "node-1763823369058_behavior_1763823521566",
+      "targetElementId": "node-1763823369058_behavior_1763823525348",
+      "nodeId": "node-1763823369058"
+    },
+    {
+      "id": "internal-conn-1763823565264",
+      "sourceElementId": "node-1763823369058_behavior_1763823525348",
+      "targetElementId": "node-1763823369058_behavior_1763823434445",
+      "nodeId": "node-1763823369058"
+    },
+    {
+      "id": "internal-conn-1763823569407",
+      "sourceElementId": "node-1763823369058_behavior_1763823516532",
+      "targetElementId": "node-1763823369058_behavior_1763823523875",
+      "nodeId": "node-1763823369058"
+    },
+    {
+      "id": "internal-conn-1763823574127",
+      "sourceElementId": "node-1763823369058_behavior_1763823523875",
+      "targetElementId": "node-1763823369058_behavior_1763823437508",
+      "nodeId": "node-1763823369058"
+    },
+    {
+      "id": "internal-conn-1763823599706-0.991538633141187",
+      "sourceElementId": "node-1763823369058_behavior_1763823599706",
+      "targetElementId": "port-out-1763823369058",
+      "nodeId": "node-1763823369058"
+    },
+    {
+      "id": "internal-conn-1763823614219",
+      "sourceElementId": "node-1763823369058_behavior_1763823434445",
+      "targetElementId": "node-1763823369058_behavior_1763823599706",
+      "nodeId": "node-1763823369058"
+    },
+    {
+      "id": "internal-conn-1763823615844",
+      "sourceElementId": "node-1763823369058_behavior_1763823437508",
+      "targetElementId": "node-1763823369058_behavior_1763823599706",
+      "nodeId": "node-1763823369058"
+    }
+  ]
+}
